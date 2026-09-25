@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiver - Dashboard</title>
+</head>
+
+<body>
+
+    <h1>Quiver Dashboard</h1>
+
+    <nav>
+        <a href="{% url 'new_application' %}">+ Add Tracker</a>
+
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+
+        <a href="{% url 'profile' %}">Profile</a>
+    </nav>
+
+    <hr>
+
+    <h2>Application Statistics</h2>
+
+    <p>Applied: 12</p>
+    <p>Interviewing: 3</p>
+    <p>Offers: 1</p>
+    <p>Rejected: 5</p>
+
+    <h2>Applications</h2>
+
+    <a href="{% url 'application_tracker' %}">
+        View Example Application
+    </a>
+
+</body>
+</html>
