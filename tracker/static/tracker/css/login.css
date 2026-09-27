@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #bcd0ea;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 460px;
+    padding: 40px 20px;
+}
+
+.logo-card {
+    background-color: #fdfdf8;
+    border-radius: 16px;
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.logo-image {
+    height: 60px;
+    width: auto;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.login-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    border: none;
+    border-radius: 24px;
+    background-color: #ffffff;
+    font-size: 16px;
+    outline: none;
+}
+
+.login-form input::placeholder {
+    color: #555;
+}
+
+.forgot-link {
+    align-self: flex-end;
+    color: #3949ab;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 24px;
+    background-color: #ffffff;
+    font-size: 18px;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color: #f0f0f0;
+}
+
+.error-text {
+    color: #b00020;
+    margin-top: 16px;
+    text-align: center;
+}
+
+.signup-text {
+    margin-top: 16px;
+    color: #222;
+    font-size: 15px;
+    text-align: center;
+}
+
+.signup-text a {
+    color: #3949ab;
+    text-decoration: none;
+}
+
+.signup-text a:hover {
+    text-decoration: underline;
+}
