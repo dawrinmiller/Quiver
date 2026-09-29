@@ -1,37 +1,94 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Quiver - Dashboard</title>
+    <link rel="stylesheet" href="{% static 'tracker/css/dashboard.css' %}">
 </head>
 
 <body>
 
-    <h1>Quiver Dashboard</h1>
+    <header class="topbar">
+        <div class="topbar-left">
+            <a href="{% url 'new_application' %}" class="pill-btn">+ Add tracker</a>
+            <a href="{% url 'dashboard' %}" class="pill-btn">Dashboard</a>
+        </div>
 
-    <nav>
-        <a href="{% url 'new_application' %}">+ Add Tracker</a>
+        <div class="topbar-right">
+            <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
+                {{ request.user.username|first|upper }}
+            </a>
 
-        <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'logout' %}" class="pill-btn logout-btn">Logout</a>
 
-        <a href="{% url 'profile' %}">Profile</a>
+            <div class="logo-card">
+                <img
+                    src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                    alt="Quiver logo"
+                    class="logo-image"
+                >
+            </div>
+        </div>
+    </header>
 
-        <a href="{% url 'logout' %}">Logout</a>
-    </nav>
+    <main class="dashboard-main">
 
-    <hr>
+        <section class="stats-row">
+    <div class="stat-box">
+        <span class="stat-label">Applied</span>
+        <span class="stat-value">{{ applied_count|default:0 }}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-label">Interviewing</span>
+        <span class="stat-value">{{ interviewing_count|default:0 }}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-label">Offers</span>
+        <span class="stat-value">{{ offers_count|default:0 }}</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-label">Rejected</span>
+        <span class="stat-value">{{ rejected_count|default:0 }}</span>
+    </div>
+</section>
 
-    <h2>Application Statistics</h2>
+        <section class="search-row">
+            <input
+                type="text"
+                class="search-input"
+                placeholder="Search company or role...."
+            >
+            <button type="button" class="search-btn">Search</button>
+        </section>
 
-    <p>Applied: 12</p>
-    <p>Interviewing: 3</p>
-    <p>Offers: 1</p>
-    <p>Rejected: 5</p>
+<section class="table-section">
+    <table class="applications-table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Next Step Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td><a href="{% url 'application_tracker' %}">{{ application.company }}</a></td>
+                <td>{{ application.role }}</td>
+                <td>{{ application.status }}</td>
+                <td>{{ application.next_step_date }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No applications yet — click "+ Add tracker" to get started.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
 
-    <h2>Applications</h2>
-
-    <a href="{% url 'application_tracker' %}">
-        View Example Application
-    </a>
+    </main>
 
 </body>
 </html>
