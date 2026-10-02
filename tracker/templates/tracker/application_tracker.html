@@ -1,37 +1,87 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Quiver - Application Tracker</title>
-</head>
-
-<body>
-
-    <h1>Application Tracker</h1>
-
-    <nav>
-        <a href="{% url 'new_application' %}">+ Add Tracker</a>
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'profile' %}">Profile</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    </nav>
-
-    <hr>
-
-    <h2>Application Information</h2>
-
-    <p>Company Name</p>
-
-    <p>Job Title</p>
-
-    <p>Status</p>
-
-    <p>Important Dates</p>
-
-    <p>Notes</p>
-
-    <br>
-
-    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
-
-</body>
-</html>
+{% extends 'tracker/base.html' %}
+{% block title %}
+    Application Tracker
+{% endblock %}
+{% block heading %}
+    Application Tracker
+{% endblock %}
+{% block content %}
+    <h2>
+        Application Information
+    </h2>
+    <p>
+        Company Name:
+        {{ application.company }}
+    </p>
+    <p>
+        Job Title:
+        {{ application.role }}
+    </p>
+    <p>
+        Date Submitted:
+        {{ application.date_submitted }}
+    </p>
+    <p>
+        Status:
+        {{ application.get_status_display }}
+    </p>
+    <p>
+        Job Description:
+        {{ application.job_description|linebreaksbr }}
+    </p>
+    {% if application.job_link %}
+        <p>
+            <a href="{{ application.job_link }}" target="_blank" rel="noopener noreferrer">
+                Job posting
+            </a>
+        </p>
+    {% endif %}
+    <p>
+        Notes:
+        {{ application.notes|linebreaksbr }}
+    </p>
+    <p>
+        Created:
+        {{ application.created_at }}
+        | Updated:
+        {{ application.updated_at }}
+    </p>
+    <a href="{% url 'application_update' application.pk %}">
+        Edit Application
+    </a>
+    <form method="post" action="{% url 'application_delete' application.pk %}" onsubmit="return confirm('Delete this application and all its events?');">
+        {% csrf_token %}
+        <button type="submit">
+            Delete Application
+        </button>
+    </form>
+    <h2>
+        Important Dates / Upcoming Events
+    </h2>
+    <a href="{% url 'event_create' application.pk %}">
+        Add Event
+    </a>
+    <p>
+        Times are shown in the configured application time zone.
+    </p>
+    {% for event in upcoming_events %}
+        {% include 'tracker/event_item.html' %}
+    {% empty %}
+        <p>
+            No upcoming events.
+        </p>
+    {% endfor %}
+    <h3>
+        Past Events
+    </h3>
+    {% for event in past_events %}
+        {% include 'tracker/event_item.html' %}
+    {% empty %}
+        <p>
+            No past events.
+        </p>
+    {% endfor %}
+    <a href="{% url 'dashboard' %}">
+        Back to Dashboard
+    </a>
+{% endblock %}

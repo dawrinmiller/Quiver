@@ -1,0 +1,18 @@
+<div>
+    <p>
+        {{ event.get_event_type_display }}
+        :
+        {{ event.event_date|date:"M j, Y, g:i a T" }}
+        <br>
+        {{ event.description|linebreaksbr }}
+    </p>
+    <a href="{% url 'event_update' application.pk event.pk %}">
+        Edit Event
+    </a>
+    <form method="post" action="{% url 'event_delete' application.pk event.pk %}" onsubmit="return confirm('Delete this event?');">
+        {% csrf_token %}
+        <button type="submit">
+            Delete Event
+        </button>
+    </form>
+</div>

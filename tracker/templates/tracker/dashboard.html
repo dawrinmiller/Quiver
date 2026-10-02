@@ -1,94 +1,139 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Quiver - Dashboard</title>
-    <link rel="stylesheet" href="{% static 'tracker/css/dashboard.css' %}">
-</head>
-
-<body>
-
-    <header class="topbar">
-        <div class="topbar-left">
-            <a href="{% url 'new_application' %}" class="pill-btn">+ Add tracker</a>
-            <a href="{% url 'dashboard' %}" class="pill-btn">Dashboard</a>
-        </div>
-
-        <div class="topbar-right">
-            <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
-                {{ request.user.username|first|upper }}
-            </a>
-
-            <a href="{% url 'logout' %}" class="pill-btn logout-btn">Logout</a>
-
-            <div class="logo-card">
-                <img
-                    src="{% static 'tracker/images/QuiverLightLogo.png' %}"
-                    alt="Quiver logo"
-                    class="logo-image"
-                >
+    <head>
+        <title>
+            Quiver - Dashboard
+        </title>
+        <link rel="stylesheet" href="{% static 'tracker/css/dashboard.css' %}">
+    </head>
+    <body>
+        <header class="topbar">
+            <div class="topbar-left">
+                <a href="{% url 'new_application' %}" class="pill-btn">
+                    + Add tracker
+                </a>
+                <a href="{% url 'dashboard' %}" class="pill-btn">
+                    Dashboard
+                </a>
             </div>
-        </div>
-    </header>
-
-    <main class="dashboard-main">
-
-        <section class="stats-row">
-    <div class="stat-box">
-        <span class="stat-label">Applied</span>
-        <span class="stat-value">{{ applied_count|default:0 }}</span>
-    </div>
-    <div class="stat-box">
-        <span class="stat-label">Interviewing</span>
-        <span class="stat-value">{{ interviewing_count|default:0 }}</span>
-    </div>
-    <div class="stat-box">
-        <span class="stat-label">Offers</span>
-        <span class="stat-value">{{ offers_count|default:0 }}</span>
-    </div>
-    <div class="stat-box">
-        <span class="stat-label">Rejected</span>
-        <span class="stat-value">{{ rejected_count|default:0 }}</span>
-    </div>
-</section>
-
-        <section class="search-row">
-            <input
-                type="text"
-                class="search-input"
-                placeholder="Search company or role...."
-            >
-            <button type="button" class="search-btn">Search</button>
-        </section>
-
-<section class="table-section">
-    <table class="applications-table">
-        <thead>
-            <tr>
-                <th>Company</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Next Step Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for application in applications %}
-            <tr>
-                <td><a href="{% url 'application_tracker' %}">{{ application.company }}</a></td>
-                <td>{{ application.role }}</td>
-                <td>{{ application.status }}</td>
-                <td>{{ application.next_step_date }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No applications yet — click "+ Add tracker" to get started.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</section>
-
-    </main>
-
-</body>
+            <div class="topbar-right">
+                <a href="{% url 'notifications' %}" class="pill-btn" aria-label="Notifications">
+                    &#128276; {{ unread_notification_count }}
+                </a>
+                <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
+                    {{ request.user.username|first|upper }}
+                </a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="pill-btn logout-btn">
+                        Logout
+                    </button>
+                </form>
+                <div class="logo-card">
+                    <img
+                        src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                        alt="Quiver logo"
+                        class="logo-image"
+                    >
+                </div>
+            </div>
+        </header>
+        <main class="dashboard-main">
+            <section class="stats-row">
+                <div class="stat-box">
+                    <span class="stat-label">
+                        Applied
+                    </span>
+                    <span class="stat-value">
+                        {{ applied_count|default:0 }}
+                    </span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">
+                        Interviewing
+                    </span>
+                    <span class="stat-value">
+                        {{ interviewing_count|default:0 }}
+                    </span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">
+                        Offers
+                    </span>
+                    <span class="stat-value">
+                        {{ offers_count|default:0 }}
+                    </span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">
+                        Rejected
+                    </span>
+                    <span class="stat-value">
+                        {{ rejected_count|default:0 }}
+                    </span>
+                </div>
+            </section>
+            <a href="{% url 'upcoming_events' %}">
+                Upcoming Events
+            </a>
+            <form method="get" class="search-row">
+                <input
+                    type="text"
+                    name="q" value="{{ search }}"
+                    class="search-input"
+                    placeholder="Search company or role...."
+                >
+                <button type="submit" class="search-btn">
+                    Search
+                </button>
+            </form>
+            <section class="table-section">
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Company
+                            </th>
+                            <th>
+                                Role
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Next Step Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in applications %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'application_detail' application.pk %}">
+                                        {{ application.company }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ application.role }}
+                                </td>
+                                <td>
+                                    {{ application.get_status_display }}
+                                </td>
+                                <td>
+                                    {{ application.next_step_date|date:"M j, Y, g:i a T"|default:"No upcoming events" }}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">
+                                    No applications yet — click "+ Add tracker" to get started.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </body>
 </html>

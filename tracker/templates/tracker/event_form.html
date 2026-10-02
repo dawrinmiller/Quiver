@@ -1,0 +1,29 @@
+{% extends 'tracker/base.html' %}
+{% block heading %}
+    {% if event %}
+        Edit
+    {% else %}
+        Add
+    {% endif %}
+    Event
+{% endblock %}
+{% block content %}
+    <p>
+        {{ application.company }}
+        -
+        {{ application.role }}
+    </p>
+    <p>
+        Enter the time in the configured application time zone.
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            Save Event
+        </button>
+    </form>
+    <a href="{% url 'application_detail' application.pk %}">
+        Cancel
+    </a>
+{% endblock %}
