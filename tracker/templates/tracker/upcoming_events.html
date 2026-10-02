@@ -1,0 +1,21 @@
+{% extends 'tracker/base.html' %}
+{% block heading %}
+    Upcoming Events
+{% endblock %}
+{% block content %}
+    {% for event in events %}
+        <p>
+            <a href="{% url 'application_detail' event.application.pk %}">
+                {{ event.application }}
+            </a>
+            —
+            {{ event.get_event_type_display }}
+            :
+            {{ event.event_date|date:"M j, Y, g:i a T" }}
+        </p>
+    {% empty %}
+        <p>
+            No upcoming events.
+        </p>
+    {% endfor %}
+{% endblock %}

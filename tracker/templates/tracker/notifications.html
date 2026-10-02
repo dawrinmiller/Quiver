@@ -1,0 +1,53 @@
+{% extends 'tracker/base.html' %}
+{% block title %}
+    Notifications
+{% endblock %}
+{% block heading %}
+    Notifications
+{% endblock %}
+{% block content %}
+    <form method="post" action="{% url 'notifications_read_all' %}">
+        {% csrf_token %}
+        <button type="submit">
+            Mark All as Read
+        </button>
+    </form>
+    {% for notification in notifications %}
+        <article>
+            <h2>
+                {{ notification.title }}
+            </h2>
+            <p>
+                <a href="{% url 'application_detail' notification.event.application.pk %}">
+                    {{ notification.event.application.role }} — {{ notification.event.application.company }}
+                </a>
+            </p>
+            <p>
+                {{ notification.event.get_event_type_display }}:
+                {{ notification.event.event_date|date:"M j, Y, g:i a T" }}
+            </p>
+            <p>
+                {{ notification.message }}
+            </p>
+            <p>
+                Created: {{ notification.created_at|date:"M j, Y, g:i a T" }}
+            </p>
+            {% if notification.is_read %}
+                <p>
+                    Read
+                </p>
+            {% else %}
+                <form method="post" action="{% url 'notification_read' notification.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">
+                        Mark as Read
+                    </button>
+                </form>
+            {% endif %}
+        </article>
+    {% empty %}
+        <p>
+            No notifications yet. Event reminders appear the day before an event.
+        </p>
+    {% endfor %}
+{% endblock %}

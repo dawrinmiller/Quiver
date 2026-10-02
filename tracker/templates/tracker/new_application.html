@@ -1,39 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Quiver - New Application</title>
-</head>
-
-<body>
-
-    <h1>Start New Application Tracker</h1>
-
-    <nav>
-        <a href="{% url 'new_application' %}">+ Add Tracker</a>
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'profile' %}">Profile</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    </nav>
-
-    <hr>
-
-    <p>Company Name</p>
-
-    <p>Job Title</p>
-
-    <p>Date Submitted</p>
-
-    <p>Job Description / Link</p>
-
-    <p>Select Resume Used</p>
-
-    <p>Select Cover Letter Used</p>
-
-    <br>
-
-    <a href="{% url 'dashboard' %}">Cancel</a>
-
-    <a href="{% url 'application_tracker' %}">Create</a>
-
-</body>
-</html>
+{% extends 'tracker/base.html' %}
+{% block title %}
+    {% if application %}
+        Edit
+    {% else %}
+        New
+    {% endif %}
+    Application
+{% endblock %}
+{% block heading %}
+    {% if application %}
+        Edit Application
+    {% else %}
+        Start New Application Tracker
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            {% if application %}
+                Save Changes
+            {% else %}
+                Create
+            {% endif %}
+        </button>
+    </form>
+    <p>
+        Resume and cover letter selection will be available in a later version.
+    </p>
+    <a href="{% url 'dashboard' %}">
+        Cancel
+    </a>
+{% endblock %}

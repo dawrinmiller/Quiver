@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Quiver -
+            {% block title %}
+                Tracker
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+        <h1>
+            {% block heading %}
+                Quiver
+            {% endblock %}
+        </h1>
+        <nav>
+            <a href="{% url 'notifications' %}" aria-label="Notifications">
+                &#128276; {{ unread_notification_count }}
+            </a>
+            <a href="{% url 'new_application' %}">
+                + Add Tracker
+            </a>
+            <a href="{% url 'dashboard' %}">
+                Dashboard
+            </a>
+            <a href="{% url 'upcoming_events' %}">
+                Upcoming Events
+            </a>
+            <a href="{% url 'profile' %}">
+                Profile
+            </a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline">
+                {% csrf_token %}
+                <button type="submit">
+                    Logout
+                </button>
+            </form>
+        </nav>
+        <hr>
+        {% for message in messages %}
+            <p>
+                {{ message }}
+            </p>
+        {% endfor %}
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
