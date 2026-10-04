@@ -1,3 +1,4 @@
+# Describe how website addresses lead to Quiver's pages.
 """
 URL configuration for quiver_project project.
 
@@ -17,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# Connect the administrator pages and the tracker pages to their web addresses.
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tracker.urls')),

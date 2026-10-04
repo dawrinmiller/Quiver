@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Event, Notification
 
 
+# Create one reminder for each of the user's events happening tomorrow.
 def create_event_notifications(user):
     """Create one reminder per event on the calendar day before it occurs."""
     tomorrow = timezone.localdate() + timedelta(days=1)
@@ -22,6 +23,7 @@ def create_event_notifications(user):
         })
 
 
+# Provide each signed-in page with the user's unread notification count.
 def notification_context(request):
     if not request.user.is_authenticated:
         return {'unread_notification_count': 0}

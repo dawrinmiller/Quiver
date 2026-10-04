@@ -5,6 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
 
+# Connect each Quiver web address to the page or action it should open.
 urlpatterns = [
     path('', views.login_view, name='login'),
     path('dashboard/', views.dashboard_view, name='dashboard'),

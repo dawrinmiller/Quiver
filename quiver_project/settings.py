@@ -90,6 +90,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
+# Require new passwords to pass Django's built-in safety checks.
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -121,7 +122,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
+# Choose the address prefix for stylesheets and other page assets.
 STATIC_URL = 'static/'
 
 
+# Send visitors to the login page when they need to sign in.
 LOGIN_URL = 'login'

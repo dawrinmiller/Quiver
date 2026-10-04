@@ -14,12 +14,14 @@ from .forms import RecoveryUsernameForm, RecoveryAnswerForm
 from .models import SecurityQuestion
 
 
+# Set the recovery-session name and limit repeated incorrect answers.
 RECOVERY_KEY = 'password_recovery'
 MAX_ATTEMPTS = 5
 # Unknown accounts still perform a password-hash check and show a question.
 DUMMY_ANSWER_HASH = make_password('unused recovery answer')
 
 
+# Check that the current recovery step is still allowed and has not expired.
 def recovery_state(request, stage):
     state = request.session.get(RECOVERY_KEY, {})
     if state.get('stage') != stage or state.get('expires_at', 0) <= timezone.now().timestamp():
@@ -28,6 +30,7 @@ def recovery_state(request, stage):
     return state
 
 
+# Start recovery with a username and prepare its security question.
 @never_cache
 def password_reset_view(request):
     form = RecoveryUsernameForm(request.POST if request.method == 'POST' else None)
@@ -46,6 +49,7 @@ def password_reset_view(request):
     return render(request, 'tracker/password_reset_form.html', {'form': form})
 
 
+# Check the security answer, limit incorrect attempts, and allow a brief password reset.
 @never_cache
 @sensitive_post_parameters('security_answer')
 def password_recovery_question_view(request):
@@ -95,6 +99,7 @@ def password_recovery_question_view(request):
     return render(request, 'tracker/password_recovery_question.html', {'form': form, 'question': state['question']})
 
 
+# Allow a new password only after a successful, unexpired answer check.
 @never_cache
 @sensitive_post_parameters('new_password1', 'new_password2')
 def password_reset_confirm_view(request):

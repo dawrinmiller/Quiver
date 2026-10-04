@@ -10,6 +10,7 @@ from .notifications import create_event_notifications
 from .recovery import RECOVERY_KEY
 
 
+# Prepare a sample account with a protected recovery answer.
 class RecoveryTests(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user('alice', 'alice@example.com', 'Original-pass-937!')
@@ -17,15 +18,18 @@ class RecoveryTests(TestCase):
         self.security.set_answer('New York')
         self.security.save()
 
+    # Submit a sample username to start password recovery.
     def start_recovery(self, client=None, username='alice'):
         client = client or self.client
         return client.post(reverse('password_reset'), {'username': username})
 
+    # Submit a correct answer with different spacing and capitalization.
     def verify_answer(self, client=None):
         client = client or self.client
         self.start_recovery(client)
         return client.post(reverse('password_recovery_question'), {'security_answer': '  NEW   york  '})
 
+    # Check that registration requires a question and protects its answer.
     def test_registration_requires_and_hashes_security_answer(self):
         data = {'username': 'newuser', 'email': 'new@example.com', 'password1': 'Register-pass-827!', 'password2': 'Register-pass-827!',
                 'security_question': 'pet', 'security_answer': '  Sparky  '}
@@ -39,6 +43,7 @@ class RecoveryTests(TestCase):
         self.assertEqual(self.client.post(reverse('register'), data).status_code, 200)
         self.assertFalse(get_user_model().objects.filter(username='missingquestion').exists())
 
+    # Check the full recovery process, password rules, and one-time reset permission.
     def test_recovery_flow_and_single_use_authorization(self):
         self.assertContains(self.client.get(reverse('login')), reverse('password_reset'))
         self.assertRedirects(self.start_recovery(), reverse('password_recovery_question'))
@@ -58,6 +63,7 @@ class RecoveryTests(TestCase):
         self.assertTrue(self.client.login(username='alice', password='Reset-pass-723!'))
         self.assertRedirects(self.client.get(reverse('password_reset_confirm')), reverse('password_reset'))
 
+    # Check that the answer step cannot be skipped or reused in another browser session.
     def test_cannot_bypass_or_use_another_session(self):
         self.assertRedirects(self.client.get(reverse('password_recovery_question')), reverse('password_reset'))
         self.assertRedirects(self.client.get(reverse('password_reset_confirm')), reverse('password_reset'))
@@ -67,6 +73,7 @@ class RecoveryTests(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('Original-pass-937!'))
 
+    # Check that unknown accounts and accounts without questions fail safely.
     def test_unknown_and_unconfigured_accounts_fail_gracefully(self):
         get_user_model().objects.create_user('legacy', password='Original-pass-937!')
         for username in ['unknown', 'legacy']:
@@ -75,6 +82,7 @@ class RecoveryTests(TestCase):
             self.assertContains(self.client.post(reverse('password_recovery_question'), {'security_answer': 'unused recovery answer'}), 'Unable to verify')
             self.assertNotEqual(self.client.session[RECOVERY_KEY]['stage'], 'verified')
 
+    # Check that repeated wrong answers block recovery even in a new browser session.
     def test_attempt_limit_survives_new_session(self):
         self.start_recovery()
         for _ in range(5):
@@ -90,6 +98,7 @@ class RecoveryTests(TestCase):
         self.security.save()
         self.assertRedirects(other_client.post(reverse('password_recovery_question'), {'security_answer': 'New York'}), reverse('password_reset_confirm'))
 
+    # Check that expired permission or changed account details prevent a reset.
     def test_expiration_password_and_security_changes_revoke_grant(self):
         self.verify_answer()
         session = self.client.session
@@ -107,6 +116,7 @@ class RecoveryTests(TestCase):
         self.security.save()
         self.assertRedirects(self.client.get(reverse('password_reset_confirm')), reverse('password_reset'))
 
+    # Check that existing users need their current password to set up a question.
     def test_existing_user_profile_setup_requires_current_password(self):
         self.security.delete()
         self.client.force_login(self.user)
@@ -121,6 +131,7 @@ class RecoveryTests(TestCase):
         self.assertEqual(self.user.email, 'alice@example.com')
 
 
+# Prepare users and tomorrow's events to test notifications in the chosen time zone.
 @override_settings(TIME_ZONE='America/New_York')
 class NotificationTests(TestCase):
     def setUp(self):
@@ -133,6 +144,7 @@ class NotificationTests(TestCase):
         self.other_event = Event.objects.create(application=self.other_application, event_type='interview', event_date=self.tomorrow)
         self.client.force_login(self.user)
 
+    # Check that only tomorrow's events produce reminders, without duplicates.
     def test_tomorrow_only_no_duplicates_and_unread_count(self):
         Event.objects.create(application=self.application, event_type='other', event_date=self.tomorrow + timedelta(days=1))
         Event.objects.create(application=self.application, event_type='other', event_date=self.tomorrow - timedelta(days=1))
@@ -147,6 +159,7 @@ class NotificationTests(TestCase):
         self.assertContains(self.client.get(reverse('notifications')), 'Interview Tomorrow')
         self.assertNotContains(self.client.get(reverse('notifications')), 'Private Company')
 
+    # Check that tomorrow is determined using the website's local calendar date.
     def test_calendar_boundary_uses_local_timezone(self):
         self.event.delete()
         start = self.tomorrow.replace(hour=0)
@@ -155,6 +168,7 @@ class NotificationTests(TestCase):
         create_event_notifications(self.user)
         self.assertEqual(Notification.objects.filter(user=self.user).count(), 1)
 
+    # Check that users can mark only their own notifications as read using protected forms.
     def test_mark_read_and_all_read_are_scoped_post_only(self):
         create_event_notifications(self.user)
         create_event_notifications(self.other)
@@ -174,6 +188,7 @@ class NotificationTests(TestCase):
         client.force_login(self.user)
         self.assertEqual(client.post(reverse('notification_read', args=[own.pk])).status_code, 403)
 
+    # Check that event edits and deletions remove outdated notifications.
     def test_edit_and_delete_events_and_application_cleanup(self):
         create_event_notifications(self.user)
         data = {'event_type': 'follow_up', 'event_date': (self.tomorrow + timedelta(days=2)).isoformat(), 'description': 'Updated'}

@@ -1,3 +1,4 @@
+/* Set the dashboard's background and default text style. */
 body {
     margin: 0;
     min-height: 100vh;
@@ -5,6 +6,7 @@ body {
     font-family: 'Segoe UI', Arial, sans-serif;
 }
 
+/* Arrange the navigation bar across the top of the page. */
 .topbar {
     background-color: #2b3e5c;
     display: flex;
@@ -13,6 +15,7 @@ body {
     padding: 20px 40px;
 }
 
+/* Keep navigation links and account controls aligned with even spacing. */
 .topbar-left,
 .topbar-right {
     display: flex;
@@ -20,6 +23,7 @@ body {
     gap: 16px;
 }
 
+/* Style the rounded navigation buttons. */
 .pill-btn {
     background-color: #ffffff;
     color: #222;
@@ -31,10 +35,12 @@ body {
     white-space: nowrap;
 }
 
+/* Highlight a navigation button when the pointer moves over it. */
 .pill-btn:hover {
     background-color: #f0f0f0;
 }
 
+/* Style the logout button in the navigation bar. */
 .logout-btn {
     background-color: transparent;
     color: #ffffff;
@@ -42,11 +48,13 @@ body {
     font-size: 14px;
 }
 
+/* Highlight logout when the pointer moves over it. */
 .logout-btn:hover {
     text-decoration: underline;
     background-color: transparent;
 }
 
+/* Style the round profile link showing the user's initial. */
 .avatar-circle {
     width: 48px;
     height: 48px;
@@ -61,6 +69,7 @@ body {
     text-decoration: none;
 }
 
+/* Give the logo a light background and rounded corners. */
 .logo-card {
     background-color: #fdfdf8;
     border-radius: 12px;
@@ -69,17 +78,20 @@ body {
     align-items: center;
 }
 
+/* Set the dashboard logo's displayed size. */
 .logo-image {
     height: 32px;
     width: auto;
 }
 
+/* Center the dashboard content and add space around it. */
 .dashboard-main {
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 20px;
 }
 
+/* Arrange application totals in a rounded panel. */
 .stats-row {
     display: flex;
     justify-content: space-between;
@@ -89,6 +101,7 @@ body {
     margin-bottom: 32px;
 }
 
+/* Stack each progress label above its total. */
 .stat-box {
     display: flex;
     flex-direction: column;
@@ -96,17 +109,20 @@ body {
     gap: 8px;
 }
 
+/* Style the names of the application progress stages. */
 .stat-label {
     font-size: 18px;
     color: #222;
 }
 
+/* Make the application totals larger and easier to read. */
 .stat-value {
     font-size: 32px;
     font-weight: 500;
     color: #222;
 }
 
+/* Align the dashboard search field and button. */
 .search-row {
     display: flex;
     align-items: center;
@@ -114,6 +130,7 @@ body {
     margin-bottom: 24px;
 }
 
+/* Style the field used to search companies and job titles. */
 .search-input {
     flex: 1;
     border: none;
@@ -124,6 +141,7 @@ body {
     outline: none;
 }
 
+/* Style the search button. */
 .search-btn {
     background-color: #f2f1e9;
     border: none;
@@ -134,14 +152,17 @@ body {
     cursor: pointer;
 }
 
+/* Highlight the search button when the pointer moves over it. */
 .search-btn:hover {
     background-color: #e6e5dc;
 }
 
+/* Allow wide application tables to scroll sideways. */
 .table-section {
     overflow-x: auto;
 }
 
+/* Style the application table's background and edges. */
 .applications-table {
     width: 100%;
     border-collapse: collapse;
@@ -150,6 +171,7 @@ body {
     overflow: hidden;
 }
 
+/* Give table headings and entries consistent spacing and borders. */
 .applications-table th,
 .applications-table td {
     padding: 18px 20px;
@@ -158,15 +180,18 @@ body {
     font-size: 17px;
 }
 
+/* Make the table headings stand out. */
 .applications-table th {
     font-weight: 700;
 }
 
+/* Style the links that open application details. */
 .applications-table td a {
     color: #222;
     text-decoration: none;
 }
 
+/* Underline an application link when the pointer moves over it. */
 .applications-table td a:hover {
     text-decoration: underline;
 }

@@ -1,3 +1,4 @@
+/* Center the login page and set its background and default text style. */
 body {
     margin: 0;
     min-height: 100vh;
@@ -8,6 +9,7 @@ body {
     justify-content: center;
 }
 
+/* Arrange login content in a centered column. */
 .login-container {
     display: flex;
     flex-direction: column;
@@ -17,6 +19,7 @@ body {
     padding: 40px 20px;
 }
 
+/* Give the logo a light background and space around it. */
 .logo-card {
     background-color: #fdfdf8;
     border-radius: 16px;
@@ -27,17 +30,20 @@ body {
     margin-bottom: 32px;
 }
 
+/* Set the login logo's displayed size. */
 .logo-image {
     height: 60px;
     width: auto;
 }
 
+/* Stack the login fields and button vertically. */
 .login-form {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
+/* Style the username and password entry fields. */
 .login-form input {
     width: 100%;
     box-sizing: border-box;
@@ -50,10 +56,12 @@ body {
     outline: none;
 }
 
+/* Style the hints shown inside empty login fields. */
 .login-form input::placeholder {
     color: #555;
 }
 
+/* Position and style the Forgot Password link. */
 .forgot-link {
     align-self: flex-end;
     color: #3949ab;
@@ -62,10 +70,12 @@ body {
     margin-bottom: 28px;
 }
 
+/* Underline Forgot Password when the pointer moves over it. */
 .forgot-link:hover {
     text-decoration: underline;
 }
 
+/* Style the login button. */
 .login-form button {
     width: 100%;
     padding: 16px;
@@ -78,16 +88,19 @@ body {
     cursor: pointer;
 }
 
+/* Highlight the login button when the pointer moves over it. */
 .login-form button:hover {
     background-color: #f0f0f0;
 }
 
+/* Make login errors visible in red. */
 .error-text {
     color: #b00020;
     margin-top: 16px;
     text-align: center;
 }
 
+/* Style the invitation to create an account. */
 .signup-text {
     margin-top: 16px;
     color: #222;
@@ -95,11 +108,13 @@ body {
     text-align: center;
 }
 
+/* Style the registration link. */
 .signup-text a {
     color: #3949ab;
     text-decoration: none;
 }
 
+/* Underline the registration link when the pointer moves over it. */
 .signup-text a:hover {
     text-decoration: underline;
 }

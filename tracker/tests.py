@@ -8,6 +8,7 @@ from django.utils import timezone
 from .models import Application, Event, Notification
 
 
+# Prepare sample accounts, applications, and events for the tests.
 class TrackerTests(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user('alice', 'alice@example.com', 'Original-pass-937!')
@@ -18,9 +19,11 @@ class TrackerTests(TestCase):
         self.foreign_event = Event.objects.create(application=self.foreign, event_type='other', event_date=timezone.now() + timedelta(days=3))
         self.client.force_login(self.user)
 
+    # Provide sample application details for the tests.
     def data(self, **changes):
         return {'company': 'Example', 'role': 'Developer', 'date_submitted': str(timezone.localdate()), 'status': 'applied', **changes}
 
+    # Check that applications can be created, updated, deleted, and counted correctly.
     def test_application_crud_and_statistics(self):
         response = self.client.post(reverse('new_application'), self.data(user=self.other.pk))
         created = Application.objects.get(company='Example')
@@ -38,6 +41,7 @@ class TrackerTests(TestCase):
         self.assertFalse(Application.objects.filter(pk=created.pk).exists())
         self.assertEqual(self.client.get(reverse('dashboard')).context['rejected_count'], 0)
 
+    # Check that missing details and invalid dates are rejected.
     def test_validation(self):
         response = self.client.post(reverse('new_application'), {})
         self.assertTrue(response.context['form'].errors)
@@ -48,6 +52,7 @@ class TrackerTests(TestCase):
         response = self.client.post(reverse('event_create', args=[self.application.pk]), {'event_type': 'other', 'event_date': (timezone.now() - timedelta(days=1)).isoformat()})
         self.assertContains(response, 'Choose a future date')
 
+    # Check that events can be managed and the nearest date appears on the dashboard.
     def test_events_and_next_step(self):
         future = timezone.now() + timedelta(hours=2)
         data = {'event_type': 'follow_up', 'event_date': future.isoformat(), 'description': 'Call recruiter', 'application': self.foreign.pk}
@@ -66,6 +71,7 @@ class TrackerTests(TestCase):
         self.client.post(reverse('event_delete', args=[self.application.pk, event.pk]))
         self.assertFalse(Event.objects.filter(pk=event.pk).exists())
 
+    # List the private pages that should require someone to sign in.
     def protected_routes(self):
         return [('dashboard', []), ('profile', []), ('new_application', []), ('application_tracker', []),
                 ('application_detail', [self.foreign.pk]), ('application_update', [self.foreign.pk]),
@@ -73,6 +79,7 @@ class TrackerTests(TestCase):
                 ('event_update', [self.foreign.pk, self.foreign_event.pk]), ('event_delete', [self.foreign.pk, self.foreign_event.pk]),
                 ('upcoming_events', []), ('notifications', []), ('notification_read', [1]), ('notifications_read_all', []), ('password_change', []), ('password_change_done', [])]
 
+    # Check that users cannot access or change someone else's applications or events.
     def test_ownership(self):
         for name, args in self.protected_routes():
             if name.startswith('application_') and args or name.startswith('event_'):
@@ -84,6 +91,7 @@ class TrackerTests(TestCase):
         self.assertTrue(Application.objects.filter(pk=self.foreign.pk).exists())
         self.assertTrue(Event.objects.filter(pk=self.foreign_event.pk).exists())
 
+    # Check that private pages require login and that delete requests need form protection.
     def test_authentication_and_csrf(self):
         self.client.logout()
         for name, args in self.protected_routes():
@@ -93,6 +101,7 @@ class TrackerTests(TestCase):
         client.force_login(self.user)
         self.assertEqual(client.post(reverse('application_delete', args=[self.application.pk])).status_code, 403)
 
+    # Check that changing a password keeps the user signed in and disables the old password.
     def test_password_change(self):
         data = {'old_password': 'wrong', 'new_password1': 'Updated-pass-834!', 'new_password2': 'Updated-pass-834!'}
         self.assertEqual(self.client.post(reverse('password_change'), data).status_code, 200)
@@ -103,6 +112,7 @@ class TrackerTests(TestCase):
         self.assertFalse(self.user.check_password('Original-pass-937!'))
         self.assertTrue(self.client.login(username='alice', password='Updated-pass-834!'))
 
+    # Check account registration, email updates, and signing out.
     def test_registration_profile_logout(self):
         self.client.logout()
         response = self.client.post(reverse('register'), {'username': 'charlie', 'email': 'charlie@example.com', 'password1': 'Register-pass-827!', 'password2': 'Register-pass-827!', 'security_question': 'pet', 'security_answer': 'Sparky'})
