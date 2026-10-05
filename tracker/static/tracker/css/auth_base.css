@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #bcd0ea;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ 
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 460px;
+    padding: 40px 20px;
+}
+ 
+.logo-card {
+    background-color: #fdfdf8;
+    border-radius: 16px;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+ 
+.logo-image {
+    height: 44px;
+    width: auto;
+}
+ 
+.auth-card {
+    background-color: #f2f1e9;
+    border-radius: 16px;
+    padding: 32px 36px;
+    width: 100%;
+    box-sizing: border-box;
+}
+ 
+.auth-card h1 {
+    margin: 0 0 20px 0;
+    font-size: 26px;
+    color: #222;
+    text-align: center;
+}
+ 
+.auth-card form p {
+    margin-bottom: 16px;
+}
+ 
+.auth-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+    color: #333;
+}
+ 
+.auth-card input[type="text"],
+.auth-card input[type="email"],
+.auth-card input[type="password"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 24px;
+    background-color: #ffffff;
+    font-size: 16px;
+    outline: none;
+}
+ 
+.auth-card button[type="submit"] {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px;
+    border: none;
+    border-radius: 24px;
+    background-color: #2b3e5c;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+}
+ 
+.auth-card button[type="submit"]:hover {
+    background-color: #223049;
+}
+ 
+.auth-card .page-note {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+ 
+.auth-card a {
+    color: #3949ab;
+    text-decoration: none;
+}
+ 
+.auth-card a:hover {
+    text-decoration: underline;
+}
+ 
+.auth-footer {
+    margin-top: 20px;
+    color: #222;
+    font-size: 15px;
+    text-align: center;
+}
+ 
+.auth-footer a {
+    color: #3949ab;
+    text-decoration: none;
+}
+ 
+.auth-footer a:hover {
+    text-decoration: underline;
+}

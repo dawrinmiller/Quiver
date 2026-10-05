@@ -1,0 +1,82 @@
+.application-form-page {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #f2f1e9;
+    border-radius: 16px;
+    padding: 40px 48px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+ 
+.application-form-page h1 {
+    margin: 0 0 24px 0;
+    font-size: 28px;
+    color: #222;
+}
+ 
+.application-form-page form p {
+    margin-bottom: 18px;
+}
+ 
+.application-form-page label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+    color: #333;
+}
+ 
+.application-form-page input[type="text"],
+.application-form-page input[type="email"],
+.application-form-page input[type="password"],
+.application-form-page input[type="date"],
+.application-form-page input[type="number"],
+.application-form-page textarea,
+.application-form-page select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ffffff;
+    font-size: 16px;
+    outline: none;
+    font-family: inherit;
+}
+ 
+.application-form-page textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+ 
+.application-form-page button[type="submit"] {
+    margin-top: 8px;
+    padding: 14px 36px;
+    border: none;
+    border-radius: 24px;
+    background-color: #2b3e5c;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+ 
+.application-form-page button[type="submit"]:hover {
+    background-color: #223049;
+}
+ 
+.application-form-page .page-note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+ 
+.application-form-page .cancel-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #3949ab;
+    text-decoration: none;
+}
+ 
+.application-form-page .cancel-link:hover {
+    text-decoration: underline;
+}
+ 

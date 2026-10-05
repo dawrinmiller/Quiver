@@ -1,18 +1,33 @@
-{# Provide the shared page layout and styling for password recovery. #}
+{# Shared layout for pre-login pages: login, register, forgot password, etc. #}
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>
-            Quiver - Account
-        </title>
-        <link rel="stylesheet" href="{% static 'tracker/css/login.css' %}">
-    </head>
-    <body>
-        <main class="login-container">
-            {% block content %}
-            {% endblock %}
-        </main>
-    </body>
+<html>
+<head>
+    <title>Quiver - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'tracker/css/auth_base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+ 
+<body>
+ 
+    <div class="auth-container">
+ 
+        <div class="logo-card">
+            <img
+                src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                alt="Quiver logo"
+                class="logo-image"
+            >
+        </div>
+ 
+        <div class="auth-card">
+            {% block content %}{% endblock %}
+        </div>
+ 
+        {% block footer %}{% endblock %}
+ 
+    </div>
+ 
+</body>
 </html>
+ 

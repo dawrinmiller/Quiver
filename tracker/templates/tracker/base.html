@@ -1,4 +1,5 @@
 {# Provide the shared navigation, notification count, and messages for tracker pages. #}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,43 +10,67 @@
                 Tracker
             {% endblock %}
         </title>
+        <link rel="stylesheet" href="{% static 'tracker/css/base.css' %}">
+        {% block extra_css %}{% endblock %}
     </head>
     <body>
-        <h1>
-            {% block heading %}
-                Quiver
-            {% endblock %}
-        </h1>
-        <nav>
-            <a href="{% url 'notifications' %}" aria-label="Notifications">
-                &#128276; {{ unread_notification_count }}
-            </a>
-            <a href="{% url 'new_application' %}">
-                + Add Tracker
-            </a>
-            <a href="{% url 'dashboard' %}">
-                Dashboard
-            </a>
-            <a href="{% url 'upcoming_events' %}">
-                Upcoming Events
-            </a>
-            <a href="{% url 'profile' %}">
-                Profile
-            </a>
-            <form method="post" action="{% url 'logout' %}" style="display:inline">
-                {% csrf_token %}
-                <button type="submit">
-                    Logout
-                </button>
-            </form>
-        </nav>
-        <hr>
-        {% for message in messages %}
-            <p>
-                {{ message }}
-            </p>
-        {% endfor %}
-        {% block content %}
-        {% endblock %}
+ 
+        <header class="topbar">
+            <div class="topbar-left">
+                <a href="{% url 'notifications' %}" class="pill-btn notification-pill" aria-label="Notifications">
+                    &#128276; {{ unread_notification_count }}
+                </a>
+                <a href="{% url 'new_application' %}" class="pill-btn">
+                    + Add Tracker
+                </a>
+                <a href="{% url 'dashboard' %}" class="pill-btn">
+                    Dashboard
+                </a>
+                <a href="{% url 'upcoming_events' %}" class="pill-btn">
+                    Upcoming Events
+                </a>
+            </div>
+ 
+            <div class="topbar-right">
+                <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
+                    {{ request.user.username|first|upper }}
+                </a>
+ 
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="pill-btn logout-btn">
+                        Logout
+                    </button>
+                </form>
+ 
+                <div class="logo-card">
+                    <img
+                        src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                        alt="Quiver logo"
+                        class="logo-image"
+                    >
+                </div>
+            </div>
+        </header>
+ 
+        <main class="page-main">
+            <div class="page-card">
+                <h1 class="page-heading">
+                    {% block heading %}
+                        Quiver
+                    {% endblock %}
+                </h1>
+ 
+                {% for message in messages %}
+                    <p class="flash-message">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+ 
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+ 
     </body>
 </html>

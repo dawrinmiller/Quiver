@@ -1,5 +1,11 @@
 #!/usr/bin/env python
+
+# python manage.py runserver
+# http://127.0.0.1:8000/
+
 """Django's command-line utility for administrative tasks."""
+
+
 import os
 import sys
 

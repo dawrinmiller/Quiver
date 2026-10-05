@@ -1,0 +1,190 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #bcd0ea;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+ 
+/* ---- Top navbar (shared across every page) ---- */
+ 
+.topbar {
+    background-color: #2b3e5c;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+ 
+.topbar-left,
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+ 
+.pill-btn {
+    background-color: #ffffff;
+    color: #222;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 24px;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+ 
+.pill-btn:hover {
+    background-color: #f0f0f0;
+}
+ 
+.notification-pill {
+    padding: 12px 18px;
+}
+ 
+.logout-form {
+    margin: 0;
+}
+ 
+.avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #b9c4d6;
+    color: #2b3e5c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+}
+ 
+.logo-card {
+    background-color: #fdfdf8;
+    border-radius: 12px;
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+}
+ 
+.logo-image {
+    height: 28px;
+    width: auto;
+}
+ 
+/* ---- Generic inner page layout ---- */
+ 
+.page-main {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 50px 20px;
+}
+ 
+.page-card {
+    background-color: #f2f1e9;
+    border-radius: 16px;
+    padding: 40px 48px;
+}
+ 
+.page-heading {
+    margin: 0 0 24px 0;
+    font-size: 28px;
+    color: #222;
+}
+ 
+.page-card h2 {
+    font-size: 20px;
+    color: #2b3e5c;
+    margin: 36px 0 16px 0;
+    padding-top: 24px;
+    border-top: 1px solid #d8d6c8;
+}
+ 
+.page-card h2:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+ 
+.flash-message {
+    background-color: #e4e9f3;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    color: #222;
+    font-size: 15px;
+}
+ 
+/* ---- Forms (used by application form, register, profile, etc.) ---- */
+ 
+.page-card form p {
+    margin-bottom: 18px;
+}
+ 
+.page-card label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+    color: #333;
+}
+ 
+.page-card input[type="text"],
+.page-card input[type="email"],
+.page-card input[type="password"],
+.page-card input[type="date"],
+.page-card input[type="url"],
+.page-card input[type="number"],
+.page-card textarea,
+.page-card select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ffffff;
+    font-size: 16px;
+    outline: none;
+    font-family: inherit;
+}
+ 
+.page-card textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+ 
+.page-card button[type="submit"] {
+    margin-top: 8px;
+    padding: 14px 36px;
+    border: none;
+    border-radius: 24px;
+    background-color: #2b3e5c;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+ 
+.page-card button[type="submit"]:hover {
+    background-color: #223049;
+}
+ 
+.page-note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+ 
+.page-card a {
+    color: #3949ab;
+    text-decoration: none;
+}
+ 
+.page-card a:hover {
+    text-decoration: underline;
+}

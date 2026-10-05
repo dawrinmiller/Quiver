@@ -1,27 +1,43 @@
+{% load static %}
 {# Show the form for creating an account and choosing a recovery question. #}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
-            Quiver - Register
-        </title>
-    </head>
-    <body>
-        <h1>
-            Create Account
-        </h1>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">
-                Create Account
-            </button>
-        </form>
-        <p>
+<head>
+    <title>Quiver - Register</title>
+    <link rel="stylesheet" href="{% static 'tracker/css/register.css' %}">
+</head>
+ 
+<body>
+ 
+    <div class="auth-container">
+ 
+        <div class="logo-card">
+            <img
+                src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                alt="Quiver logo"
+                class="logo-image"
+            >
+        </div>
+ 
+        <div class="auth-card">
+            <h1 class="auth-heading">Create Account</h1>
+ 
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">
+                    Create Account
+                </button>
+            </form>
+        </div>
+ 
+        <p class="auth-footer">
             Already have an account?
-            <a href="{% url 'login' %}">
-                Login
-            </a>
+            <a href="{% url 'login' %}">Login</a>
         </p>
-    </body>
+ 
+    </div>
+ 
+</body>
 </html>
+ 
