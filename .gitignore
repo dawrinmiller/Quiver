@@ -23,3 +23,5 @@ media/
 # Operating system files
 .DS_Store
 Thumbs.db
+# Uploaded career documents must remain private and outside source control.
+private_media/

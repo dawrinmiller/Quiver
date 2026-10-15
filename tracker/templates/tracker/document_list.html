@@ -1,0 +1,26 @@
+<!-- Display private documents with ownership-checked view, download, and delete links. -->
+{% for document in documents %}
+    <article>
+        <p>
+            {{ document.filename }}
+            —
+            {{ document.uploaded_at|date:"M j, Y, g:i a" }}
+        </p>
+        {% if document.kind != 'resume' %}
+            <a href="{% url 'document_download' document.pk %}?view=1" target="_blank" rel="noopener noreferrer">
+                View
+            </a>
+        {% endif %}
+        <a href="{% url 'document_download' document.pk %}">Download</a>
+        <form method="post" action="{% url 'document_delete' document.pk %}" onsubmit="return confirm('Delete this document? Application links to it will be cleared.');">
+            {% csrf_token %}
+            <button type="submit">
+                Delete
+            </button>
+        </form>
+    </article>
+{% empty %}
+    <p>
+        No documents uploaded yet.
+    </p>
+{% endfor %}

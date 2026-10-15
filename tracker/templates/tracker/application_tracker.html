@@ -20,7 +20,7 @@
     </p>
     <p>
         Date Submitted:
-        {{ application.date_submitted }}
+        {{ application.date_submitted|default:"Not submitted" }}
     </p>
     <p>
         Status:
@@ -43,9 +43,9 @@
     </p>
     <p>
         Created:
-        {{ application.created_at }}
+        {{ application.created_at|date:"M j, Y, g:i a T" }}
         | Updated:
-        {{ application.updated_at }}
+        {{ application.updated_at|date:"M j, Y, g:i a T" }}
     </p>
     <a href="{% url 'application_update' application.pk %}">
         Edit Application
@@ -56,6 +56,48 @@
             Delete Application
         </button>
     </form>
+    <!-- Display selected documents without making duplicate copies. -->
+    <h2>
+        Application Documents
+    </h2>
+    {% if application.resume %}
+        <p>
+            Resume:
+            {{ application.resume.filename }}
+            <a href="{% url 'document_download' application.resume_id %}">
+                Download
+            </a>
+        </p>
+    {% else %}
+        <p>
+            No resume selected.
+        </p>
+    {% endif %}
+    {% if application.cover_letter %}
+        <p>
+            Cover letter:
+            {{ application.cover_letter.filename }}
+            <a href="{% url 'document_download' application.cover_letter_id %}?view=1" target="_blank" rel="noopener noreferrer">
+                View
+            </a>
+            <a href="{% url 'document_download' application.cover_letter_id %}">
+                Download
+            </a>
+        </p>
+    {% else %}
+        <p>
+            No cover letter selected.
+        </p>
+    {% endif %}
+    <!-- Saved feedback remains available after changing status. -->
+    {% if application.rejection_feedback %}
+        <h2>
+            Rejection Feedback
+        </h2>
+        <p>
+            {{ application.rejection_feedback|linebreaksbr }}
+        </p>
+    {% endif %}
     <h2>
         Important Dates / Upcoming Events
     </h2>

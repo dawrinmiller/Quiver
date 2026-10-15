@@ -188,3 +188,18 @@ body {
 .page-card a:hover {
     text-decoration: underline;
 }
+
+/* Keep the native progress meter readable within the existing profile design. */
+.progress-bar {
+    width: 100%;
+    height: 24px;
+    accent-color: #2b3e5c;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.errorlist {
+    color: #9b2020;
+}

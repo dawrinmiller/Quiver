@@ -1,0 +1,123 @@
+<!-- Show the estimated score and its supporting account statistics. -->
+<section aria-labelledby="health-heading">
+    <h2 id="health-heading">
+        Job Search Health Score: {{ health.score }}/100
+    </h2>
+    <p>
+        Status:
+        <strong>
+            {{ health.rating }}
+        </strong>
+    </p>
+    <div class="progress">
+        <progress class="progress-bar" value="{{ health.score }}" max="100" aria-label="Job Search Health Score">
+            {{ health.score }}%
+        </progress>
+    </div>
+    <p>
+        This is an estimated progress indicator, not an assessment of your skills or employability. Hiring outcomes also depend on employers. Small samples need more data.
+    </p>
+    <p>
+        Submitted:
+        {{ health.submitted }}
+        · Reached interviews:
+        {{ health.interviews }}
+        · Offers:
+        {{ health.offers }}
+        · Rejected:
+        {{ health.rejected }}
+        · In progress:
+        {{ health.in_progress }}
+        · Submitted in 28 days:
+        {{ health.recent }}
+    </p>
+    <ul>
+        {% for recommendation in health.recommendations %}
+            <li>
+                {{ recommendation }}
+            </li>
+        {% endfor %}
+    </ul>
+    <details>
+        <summary>
+            How the score works
+        </summary>
+        <p>
+            Activity: 40 points (recent volume 15, consistency 15, recency 10). Interview conversion: 25. Offer conversion: 15. Recorded follow-through: 20. Conversion estimates use neutral starting observations to limit small-sample conclusions. Pending responses are not counted as failed outcomes. Preparing applications are excluded.
+        </p>
+    </details>
+</section>
+<!-- Save optional biography and LinkedIn details independently of account settings. -->
+<h2>
+    Bio and LinkedIn
+</h2>
+{% if profile.biography %}
+    <p>
+        {{ profile.biography|linebreaksbr }}
+    </p>
+{% endif %}
+{% if profile.linkedin_url %}
+    <p>
+        <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer">
+            LinkedIn profile
+        </a>
+    </p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="profile">
+    {{ profile_form.as_p }}
+    <button type="submit">
+        Save Profile
+    </button>
+</form>
+<h2>
+    Upload a Document
+</h2>
+<p>
+    PDF, DOCX, or DOC; maximum 5 MB. Office documents download when viewed.
+</p>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="document">
+    {{ document_form.as_p }}
+    <button type="submit">
+        Upload Document
+    </button>
+</form>
+<h2>
+    Resumes
+</h2>
+{% include 'tracker/document_list.html' with documents=resumes %}
+<h2>
+    Cover Letters
+</h2>
+{% include 'tracker/document_list.html' with documents=cover_letters %}
+<!-- Show saved feedback even if an application's status has since changed. -->
+<h2>
+    Application Feedback
+</h2>
+{% for entry in feedback_applications %}
+    <article>
+        <h3>
+            <a href="{% url 'application_detail' entry.pk %}">
+                {{ entry.company }}
+                —
+                {{ entry.role }}
+            </a>
+        </h3>
+        <p>
+            {{ entry.rejection_feedback|linebreaksbr }}
+        </p>
+        {% if entry.feedback_updated_at %}
+            <p>
+                Updated:
+                {{ entry.feedback_updated_at }}
+            </p>
+        {% endif %}
+    </article>
+{% empty %}
+    <p>
+        No employer feedback recorded yet. You can add it when editing an application.
+    </p>
+{% endfor %}

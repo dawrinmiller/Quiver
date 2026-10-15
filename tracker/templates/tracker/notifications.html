@@ -20,18 +20,22 @@
             </h2>
             <p>
                 <a href="{% url 'application_detail' notification.event.application.pk %}">
-                    {{ notification.event.application.role }} — {{ notification.event.application.company }}
+                    {{ notification.event.application.role }}
+                    —
+                    {{ notification.event.application.company }}
                 </a>
             </p>
             <p>
-                {{ notification.event.get_event_type_display }}:
+                {{ notification.event.get_event_type_display }}
+                :
                 {{ notification.event.event_date|date:"M j, Y, g:i a T" }}
             </p>
             <p>
                 {{ notification.message }}
             </p>
             <p>
-                Created: {{ notification.created_at|date:"M j, Y, g:i a T" }}
+                Created:
+                {{ notification.created_at|date:"M j, Y, g:i a T" }}
             </p>
             {% if notification.is_read %}
                 <p>
@@ -48,7 +52,7 @@
         </article>
     {% empty %}
         <p>
-            No notifications yet. Event reminders appear the day before an event.
+            No unread notifications. Reminders appear for upcoming events today or tomorrow.
         </p>
     {% endfor %}
 {% endblock %}
