@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'tracker',
 ]
 
@@ -112,7 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.environ.get('DJANGO_TIME_ZONE', 'UTC')
+# Interpret event inputs and display timestamps in Eastern time, including DST.
+TIME_ZONE = os.environ.get('DJANGO_TIME_ZONE', 'America/New_York')
 
 USE_I18N = True
 
@@ -124,6 +124,10 @@ USE_TZ = True
 
 # Choose the address prefix for stylesheets and other page assets.
 STATIC_URL = 'static/'
+
+# Private uploads are served only by ownership-checked document views.
+MEDIA_ROOT = BASE_DIR / 'private_media'
+MEDIA_URL = '/private-media/'
 
 
 # Send visitors to the login page when they need to sign in.

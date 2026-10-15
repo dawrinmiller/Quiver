@@ -20,7 +20,8 @@
             </div>
             <div class="topbar-right">
                 <a href="{% url 'notifications' %}" class="pill-btn" aria-label="Notifications">
-                    &#128276; {{ unread_notification_count }}
+                    &#128276;
+                    {{ unread_notification_count }}
                 </a>
                 <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
                     {{ request.user.username|first|upper }}
@@ -36,7 +37,7 @@
                         src="{% static 'tracker/images/QuiverLightLogo.png' %}"
                         alt="Quiver logo"
                         class="logo-image"
-                    >
+                        >
                 </div>
             </div>
         </header>
@@ -78,17 +79,30 @@
             <a href="{% url 'upcoming_events' %}">
                 Upcoming Events
             </a>
-            <form method="get" class="search-row">
+            <div class="search-row">
+                <label for="application-search">
+                    Search applications
+                </label>
                 <input
                     type="text"
-                    name="q" value="{{ search }}"
+                    id="application-search" name="q" value="{{ search }}"
                     class="search-input"
                     placeholder="Search company or role...."
-                >
-                <button type="submit" class="search-btn">
-                    Search
-                </button>
-            </form>
+                    >
+                <label for="status-filter">
+                    Status
+                </label>
+                <select id="status-filter">
+                    <option value="">
+                        All Statuses
+                    </option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}">
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
             <section class="table-section">
                 <table class="applications-table">
                     <thead>
@@ -109,7 +123,7 @@
                     </thead>
                     <tbody>
                         {% for application in applications %}
-                            <tr>
+                            <tr data-application-row data-company="{{ application.company }}" data-role="{{ application.role }}" data-status="{{ application.status }}">
                                 <td>
                                     <a href="{% url 'application_detail' application.pk %}">
                                         {{ application.company }}
@@ -132,9 +146,16 @@
                                 </td>
                             </tr>
                         {% endfor %}
+                        <tr id="no-matches" hidden>
+                            <td colspan="4">
+                                No applications match your search and status filter.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>
         </main>
+        <script src="{% static 'tracker/js/dashboard.js' %}" defer>
+        </script>
     </body>
 </html>

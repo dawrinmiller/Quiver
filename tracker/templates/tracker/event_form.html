@@ -1,5 +1,6 @@
 {# Show a form for adding or editing an application's event. #}
 {% extends 'tracker/base.html' %}
+{% load tz %}
 {% block heading %}
     {% if event %}
         Edit
@@ -15,7 +16,10 @@
         {{ application.role }}
     </p>
     <p>
-        Enter the time in the configured application time zone.
+        {% get_current_timezone as current_timezone %}
+        Enter the time in
+        {{ current_timezone }}
+        .
     </p>
     <form method="post">
         {% csrf_token %}

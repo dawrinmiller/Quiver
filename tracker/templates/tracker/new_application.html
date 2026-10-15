@@ -1,5 +1,6 @@
 {# Show a form for creating or updating a job application. #}
 {% extends 'tracker/base.html' %}
+{% load static %}
 {% block title %}
     {% if application %}
         Edit
@@ -28,10 +29,15 @@
         </button>
     </form>
     <p class="page-note">
-        Resume and cover letter selection will be available in a later version.
+        Manage resumes and cover letters on your
+        <a href="{% url 'profile' %}">
+            Profile
+        </a>
+        .
     </p>
+    <script src="{% static 'tracker/js/application_form.js' %}" defer>
+    </script>
     <a href="{% url 'dashboard' %}">
         Cancel
     </a>
 {% endblock %}
- 

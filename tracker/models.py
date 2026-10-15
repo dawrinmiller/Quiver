@@ -6,22 +6,54 @@ from django.contrib.auth.hashers import make_password, check_password
 # Define an application record and the possible progress stages.
 class Application(models.Model):
     class Status(models.TextChoices):
+        PREPARING = 'preparing', 'Preparing'
+        ONLINE_INTERVIEW = 'online_interview', 'Online Interview'
+        ONSITE_INTERVIEW = 'onsite_interview', 'On-site Interview'
         APPLIED = 'applied', 'Applied'
         INTERVIEWING = 'interviewing', 'Interviewing'
         OFFER = 'offer', 'Offer'
         REJECTED = 'rejected', 'Rejected'
 
     # Store each application's owner, job details, notes, and saved dates.
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='applications'
+    )
     company = models.CharField(max_length=200)
     role = models.CharField('job title', max_length=200)
-    date_submitted = models.DateField()
+    date_submitted = models.DateField(null=True, blank=True)
     job_description = models.TextField(blank=True)
     job_link = models.URLField(blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.APPLIED)
     notes = models.TextField(blank=True)
+    resume = models.ForeignKey(
+        'Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='resume_applications'
+    )
+    cover_letter = models.ForeignKey(
+        'Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='cover_letter_applications'
+    )
+    rejection_feedback = models.TextField(blank=True)
+    feedback_updated_at = models.DateTimeField(null=True, blank=True)
+    reached_interview = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Remember interviews when the application later receives an outcome.
+        if self.status in ('interviewing', 'online_interview', 'onsite_interview'):
+            self.reached_interview = True
+            if kwargs.get('update_fields') is not None:
+                kwargs['update_fields'] = set(kwargs['update_fields']) | {'reached_interview'}
+        super().save(*args, **kwargs)
 
     # Show the newest submitted applications first.
     class Meta:
@@ -57,7 +89,11 @@ class Event(models.Model):
 
 # Store each user's event reminders and whether they have been read.
 class Notification(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notifications')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='notifications'
+    )
     event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name='notification')
     title = models.CharField(max_length=100)
     message = models.TextField()
@@ -79,7 +115,11 @@ class SecurityQuestion(models.Model):
         CAR = 'car', 'What was the make/model of your first car?'
 
     # Store the account's question, protected answer, and temporary attempt limits.
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='security_question')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='security_question'
+    )
     question = models.CharField(max_length=20, choices=Question.choices)
     answer_hash = models.CharField(max_length=128)
     failed_attempts = models.PositiveSmallIntegerField(default=0)
@@ -97,3 +137,43 @@ class SecurityQuestion(models.Model):
     # Check whether an answer matches the protected answer on file.
     def check_answer(self, answer):
         return check_password(self.normalize_answer(answer), self.answer_hash)
+
+
+# Store optional profile information without changing Django's account model.
+class Profile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    biography = models.TextField(blank=True)
+    linkedin_url = models.URLField(blank=True)
+
+
+def document_path(instance, filename):
+    # Random storage names keep the original filename out of file paths.
+    from pathlib import Path
+    from uuid import uuid4
+    return f'documents/{instance.user_id}/{uuid4().hex}{Path(filename).suffix.lower()}'
+
+
+class Document(models.Model):
+    class Kind(models.TextChoices):
+        RESUME = 'resume', 'Resume'
+        COVER_LETTER = 'cover_letter', 'Cover Letter'
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='documents'
+    )
+    kind = models.CharField(max_length=20, choices=Kind.choices)
+    file = models.FileField(upload_to=document_path)
+    filename = models.CharField(max_length=255)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-uploaded_at', '-pk']
+
+    def __str__(self):
+        return self.filename

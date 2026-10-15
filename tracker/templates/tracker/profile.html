@@ -1,4 +1,4 @@
-{# Show account information, email and recovery-question forms, and profile placeholders. #}
+{# Show saved profile details, documents, progress, and account settings. #}
 {% extends 'tracker/base.html' %}
 {% block title %}
     Profile
@@ -7,7 +7,7 @@
     Profile
 {% endblock %}
 {% block content %}
- 
+    {% include 'tracker/profile_features.html' %}
     <h2>
         Account
     </h2>
@@ -28,7 +28,6 @@
     <a href="{% url 'password_change' %}">
         Change Password
     </a>
- 
     <h2>
         Security Question
     </h2>
@@ -45,33 +44,4 @@
             Save Security Question
         </button>
     </form>
- 
-    <h2>
-        Bio
-    </h2>
-    <p class="page-note">
-        Skills, hobbies, etc.
-    </p>
- 
-    <h2>
-        Resumes
-    </h2>
-    <p class="page-note">
-        Uploaded resumes will appear here.
-    </p>
- 
-    <h2>
-        Cover Letters
-    </h2>
-    <p class="page-note">
-        Uploaded cover letters will appear here.
-    </p>
- 
-    <h2>
-        Job Search Health Score
-    </h2>
-    <p class="page-note">
-        Health Score will appear here.
-    </p>
- 
 {% endblock %}
