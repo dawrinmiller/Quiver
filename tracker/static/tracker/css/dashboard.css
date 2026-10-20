@@ -1,94 +1,23 @@
-/* Set the dashboard's background and default text style. */
-body {
-    margin: 0;
-    min-height: 100vh;
-    background-color: #bcd0ea;
-    font-family: 'Segoe UI', Arial, sans-serif;
-}
-
-/* Arrange the navigation bar across the top of the page. */
-.topbar {
-    background-color: #2b3e5c;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-}
-
-/* Keep navigation links and account controls aligned with even spacing. */
-.topbar-left,
-.topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-/* Style the rounded navigation buttons. */
-.pill-btn {
-    background-color: #ffffff;
-    color: #222;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 14px 28px;
-    border-radius: 24px;
-    white-space: nowrap;
-}
-
-/* Highlight a navigation button when the pointer moves over it. */
-.pill-btn:hover {
-    background-color: #f0f0f0;
-}
-
-/* Style the logout button in the navigation bar. */
-.logout-btn {
-    background-color: transparent;
-    color: #ffffff;
-    padding: 8px 4px;
-    font-size: 14px;
-}
-
-/* Highlight logout when the pointer moves over it. */
-.logout-btn:hover {
-    text-decoration: underline;
-    background-color: transparent;
-}
-
-/* Style the round profile link showing the user's initial. */
-.avatar-circle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #b9c4d6;
-    color: #2b3e5c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-/* Give the logo a light background and rounded corners. */
-.logo-card {
-    background-color: #fdfdf8;
-    border-radius: 12px;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-}
-
-/* Set the dashboard logo's displayed size. */
-.logo-image {
-    height: 32px;
-    width: auto;
-}
-
-/* Center the dashboard content and add space around it. */
-.dashboard-main {
+/* Widen the page and drop the card background so the panels sit directly on the blue. */
+.page-main {
     max-width: 1100px;
-    margin: 0 auto;
     padding: 40px 20px;
+}
+
+.page-card {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+/* Keep the heading for screen readers but hide it visually, as in the mockup. */
+.page-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
 }
 
 /* Arrange application totals in a rounded panel. */
@@ -122,39 +51,45 @@ body {
     color: #222;
 }
 
-/* Align the dashboard search field and button. */
+/* Align the dashboard search field and status filter. */
 .search-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 16px;
     margin-bottom: 24px;
 }
 
-/* Style the field used to search companies and job titles. */
-.search-input {
+/* Cancel the extra label spacing that base.css adds for stacked form fields. */
+.search-row label {
+    margin-bottom: 0;
+}
+
+/* Style the search field as an underlined input (beats base.css's boxed input style). */
+.page-card input[type="text"].search-input {
     flex: 1;
+    width: auto;
     border: none;
     border-bottom: 2px solid #222;
+    border-radius: 0;
     background: transparent;
     font-size: 18px;
     padding: 8px 4px;
     outline: none;
 }
 
-/* Style the search button. */
-.search-btn {
-    background-color: #f2f1e9;
-    border: none;
-    border-radius: 24px;
-    padding: 12px 28px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
+/* Keep the status filter compact instead of full width. */
+#status-filter {
+    width: auto;
+    padding: 12px;
+    border-radius: 12px;
+    font: inherit;
+    max-width: 100%;
 }
 
-/* Highlight the search button when the pointer moves over it. */
-.search-btn:hover {
-    background-color: #e6e5dc;
+/* Hide filtered rows reliably. */
+[hidden] {
+    display: none !important;
 }
 
 /* Allow wide application tables to scroll sideways. */
@@ -195,19 +130,18 @@ body {
 .applications-table td a:hover {
     text-decoration: underline;
 }
-/* Keep instant search controls readable and hide filtered rows reliably. */
-[hidden] {
-    display: none !important;
+
+/* Force the logout button to match the white pill style everywhere. */
+.topbar .logout-form .pill-btn {
+    background-color: #ffffff !important;
+    color: #222 !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 12px 22px !important;
+    border: none !important;
+    text-decoration: none !important;
 }
 
-#status-filter {
-    padding: 12px;
-    border-radius: 12px;
-    font: inherit;
-    max-width: 100%;
-}
-
-.search-row {
-    flex-wrap: wrap;
-    align-items: center;
+.topbar .logout-form .pill-btn:hover {
+    background-color: #f0f0f0 !important;
 }
