@@ -12,6 +12,15 @@
 {% endblock %}
 {% block content %}
     <section class="stats-row">
+        {# Show the number of applications still being prepared. #}
+        <div class="stat-box">
+            <span class="stat-label">
+                Preparing
+            </span>
+            <span class="stat-value">
+                {{ preparing_count|default:0 }}
+            </span>
+        </div>
         <div class="stat-box">
             <span class="stat-label">
                 Applied

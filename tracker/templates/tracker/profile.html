@@ -23,11 +23,39 @@
         </button>
     </form>
     <p class="page-note">
-        Your email is stored as profile information. Quiver does not send emails.
+        Password recovery and enabled email reminders use your account email address.
     </p>
     <a href="{% url 'password_change' %}">
         Change Password
     </a>
+    {# Show where reminder emails will be sent. #}
+    <h2>
+        Email Notifications
+    </h2>
+    <p>
+        Get email reminders about upcoming interviews, deadlines, follow-ups, and other scheduled events.
+    </p>
+    <p>
+        Reminder emails are sent to the email associated with your Quiver account:
+        <strong>
+            {{ request.user.email|default:"No email address added" }}
+        </strong>.
+    </p>
+    {# Explain what to do when the account has no email address. #}
+    {% if not request.user.email %}
+        <p>
+            Add an account email address above before enabling email reminders.
+        </p>
+    {% endif %}
+    {# Save the user's email reminder preference. #}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="email_notifications">
+        {{ email_notification_form.as_p }}
+        <button type="submit">
+            Save Email Preferences
+        </button>
+    </form>
     <h2>
         Security Question
     </h2>

@@ -1,0 +1,1 @@
+Quiver Reminder: Upcoming {{ event_type }}

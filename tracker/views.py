@@ -17,7 +17,8 @@ from .forms import (
     ProfileEmailForm,
     SecurityQuestionForm,
     ProfileForm,
-    DocumentForm
+    DocumentForm,
+    EmailNotificationForm
 )
 from .models import Application, Event, Notification, SecurityQuestion, Profile, Document
 from .notifications import create_event_notifications
@@ -55,9 +56,17 @@ def login_view(request):
 @login_required
 def dashboard_view(request):
     applications = Application.objects.filter(user=request.user)
+    # Count this user's applications in each dashboard status.
     counts = applications.aggregate(
+        preparing_count=Count(
+            'pk',
+            filter=Q(status=Application.Status.PREPARING)
+        ),
         applied_count=Count('pk', filter=Q(status='applied')),
-        interviewing_count=Count('pk', filter=Q(status__in=INTERVIEW_STATUSES)),
+        interviewing_count=Count(
+            'pk',
+            filter=Q(status__in=INTERVIEW_STATUSES)
+        ),
         offers_count=Count('pk', filter=Q(status='offer')),
         rejected_count=Count('pk', filter=Q(status='rejected')),
     )
@@ -190,9 +199,21 @@ def upcoming_events_view(request):
 @sensitive_post_parameters('current_password', 'security_answer')
 def profile_view(request):
     # Each form has its own action so invalid submissions keep the correct errors.
-    action = request.POST.get('action', 'email') if request.method == 'POST' else None
+    action = request.POST.get(
+        'action',
+        'email'
+    ) if request.method == 'POST' else None
     # A first visit displays an empty profile; only a valid POST creates its row.
     profile = Profile.objects.filter(user=request.user).first() or Profile(user=request.user)
+    # Save email reminder settings only for the signed-in user.
+    email_notification_form = EmailNotificationForm(
+        request.POST if action == 'email_notifications' else None,
+        instance=profile
+    )
+    if action == 'email_notifications' and email_notification_form.is_valid():
+        email_notification_form.save()
+        messages.success(request, 'Email notification preferences updated.')
+        return redirect('profile')
     profile_form = ProfileForm(
         request.POST if action == 'profile' else None,
         instance=profile
@@ -244,6 +265,7 @@ def profile_view(request):
             'security_form': security_form,
             'security_configured': security is not None,
             'profile_form': profile_form,
+            'email_notification_form': email_notification_form,
             'profile': profile,
             'document_form': document_form,
             'resumes': request.user.documents.filter(kind='resume'),

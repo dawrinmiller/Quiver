@@ -9,6 +9,7 @@ body {
 }
  
 .auth-container {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -118,4 +119,54 @@ body {
  
 .auth-footer a:hover {
     text-decoration: underline;
+}
+
+/* Separate the two password recovery choices. */
+.recovery-option {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #c6c5bd;
+}
+/* Keep recovery choice headings easy to read. */
+.recovery-option h2 {
+    font-size: 20px;
+}
+
+/* Match recovery links to the existing buttons. */
+.auth-card .recovery-button {
+    display: block;
+    padding: 14px;
+    border-radius: 24px;
+    background: #2b3e5c;
+    color: #fff;
+    text-align: center;
+}
+/* Darken the recovery button when the pointer is over it. */
+.auth-card .recovery-button:hover {
+    background: #223049;
+}
+
+/* Show which control is selected when using a keyboard. */
+.auth-card input:focus-visible,
+.auth-card a:focus-visible,
+.auth-card button:focus-visible {
+    outline: 3px solid #3949ab;
+    outline-offset: 3px;
+}
+
+/* Make form errors easy to spot. */
+.auth-card .errorlist {
+    color: #9b2424;
+    padding-left: 20px;
+}
+
+/* Reduce spacing on smaller screens. */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 24px 16px;
+    }
+
+    .auth-card {
+        padding: 24px 20px;
+    }
 }

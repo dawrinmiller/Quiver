@@ -1,0 +1,20 @@
+{# Ask for the account email address. #}
+{% extends 'tracker/recovery_base.html' %}
+{% block title %}
+    Reset with Email
+{% endblock %}
+{% block content %}
+    <h1>
+        Reset with Email
+    </h1>
+    <p>
+        Enter the email address associated with your Quiver account.
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            Send Reset Link
+        </button>
+    </form>
+{% endblock %}
