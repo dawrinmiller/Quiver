@@ -1,0 +1,37 @@
+{# Let the user choose email or security-question recovery. #}
+{% extends 'tracker/recovery_base.html' %}
+{% block title %}
+    Forgot Your Password?
+{% endblock %}
+{% block content %}
+    <h1>
+        Forgot Your Password?
+    </h1>
+    <p>
+        Choose how you'd like to reset your Quiver password.
+    </p>
+    {# Open the email recovery form. #}
+    <section class="recovery-option">
+        <h2>
+            Reset with Email
+        </h2>
+        <p>
+            Receive a secure password-reset link at the email address associated with your Quiver account.
+        </p>
+        <a class="recovery-button" href="{% url 'email_password_reset' %}">
+            Reset with Email
+        </a>
+    </section>
+    {# Open the existing security-question recovery form. #}
+    <section class="recovery-option">
+        <h2>
+            Answer Security Question
+        </h2>
+        <p>
+            Answer the security question you previously configured to reset your password.
+        </p>
+        <a class="recovery-button" href="{% url 'password_reset' %}">
+            Use Security Question
+        </a>
+    </section>
+{% endblock %}

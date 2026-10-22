@@ -1,12 +1,45 @@
 from django.urls import path
 from . import views
 from . import recovery
+from .email_recovery import RecoverySelectionView, EmailPasswordResetView
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
 
 # Connect each Quiver web address to the page or action it should open.
 urlpatterns = [
+    path(
+        'forgot-password/',
+        RecoverySelectionView.as_view(),
+        name='password_recovery'
+    ),
+    path(
+        'forgot-password/email/',
+        EmailPasswordResetView.as_view(),
+        name='email_password_reset'
+    ),
+    path(
+        'forgot-password/email/sent/',
+        auth_views.PasswordResetDoneView.as_view(
+            template_name='tracker/email_reset_done.html'
+        ),
+        name='email_password_reset_done'
+    ),
+    path(
+        'forgot-password/email/reset/<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name='tracker/email_reset_confirm.html',
+            success_url=reverse_lazy('email_password_reset_complete')
+        ),
+        name='email_password_reset_confirm'
+    ),
+    path(
+        'forgot-password/email/complete/',
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name='tracker/email_reset_complete.html'
+        ),
+        name='email_password_reset_complete'
+    ),
     path('documents/<int:pk>/', views.document_download_view, name='document_download'),
     path(
         'documents/<int:pk>/delete/',

@@ -23,6 +23,8 @@
 /* Arrange application totals in a rounded panel. */
 .stats-row {
     display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
     justify-content: space-between;
     background-color: #f2f1e9;
     border-radius: 16px;
@@ -33,6 +35,7 @@
 /* Stack each progress label above its total. */
 .stat-box {
     display: flex;
+    flex: 1 1 120px;
     flex-direction: column;
     align-items: center;
     gap: 8px;

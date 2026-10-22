@@ -56,7 +56,7 @@ class RecoveryTests(TestCase):
 
     # Check the full recovery process, password rules, and one-time reset permission.
     def test_recovery_flow_and_single_use_authorization(self):
-        self.assertContains(self.client.get(reverse('login')), reverse('password_reset'))
+        self.assertContains(self.client.get(reverse('login')), reverse('password_recovery'))
         self.assertRedirects(self.start_recovery(), reverse('password_recovery_question'))
         self.assertContains(
             self.client.get(reverse('password_recovery_question')),

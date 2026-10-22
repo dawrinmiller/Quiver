@@ -172,6 +172,25 @@ class ProfileForm(forms.ModelForm):
         return value
 
 
+# Keep reminder preferences separate from biography and account email updates.
+class EmailNotificationForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['email_notifications_enabled']
+        labels = {'email_notifications_enabled': 'Receive email reminders'}
+
+    # Require a valid account email before enabling reminders.
+    def clean_email_notifications_enabled(self):
+        from django.core.validators import validate_email
+        enabled = self.cleaned_data['email_notifications_enabled']
+        if enabled:
+            try:
+                validate_email(self.instance.user.email)
+            except forms.ValidationError:
+                raise forms.ValidationError('Add a valid account email address before enabling email reminders.')
+        return enabled
+
+
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document

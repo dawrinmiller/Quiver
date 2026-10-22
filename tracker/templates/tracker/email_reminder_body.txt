@@ -1,0 +1,18 @@
+{% autoescape off %}Hello {{ name }},
+
+You have an upcoming event scheduled in Quiver.
+
+Company: {{ company }}
+Position: {{ role }}
+Event: {{ event_type }}
+Date: {{ event_date }}
+Time: {{ event_time }}
+
+Make sure you're prepared and review your application details before the event.
+
+View your application: {{ application_url }}
+
+Good luck!
+
+The Quiver Team
+{% endautoescape %}

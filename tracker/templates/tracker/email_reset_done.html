@@ -1,0 +1,16 @@
+{# Show the same email instructions to every user. #}
+{% extends 'tracker/recovery_base.html' %}
+{% block title %}
+    Email Instructions
+{% endblock %}
+{% block content %}
+    <h1>
+        Check Your Email
+    </h1>
+    <p>
+        If an eligible Quiver account matches that email address, you will receive a password-reset link. Check your spam folder too.
+    </p>
+    <p>
+        If no email arrives, try again in 15 minutes or use your security question from Recovery Options.
+    </p>
+{% endblock %}

@@ -49,28 +49,79 @@ class TrackerTests(TestCase):
 
     # Check that applications can be created, updated, deleted, and counted correctly.
     def test_application_crud_and_statistics(self):
-        response = self.client.post(reverse('new_application'), self.data(user=self.other.pk))
+        response = self.client.post(
+            reverse('new_application'),
+            self.data(user=self.other.pk)
+        )
         created = Application.objects.get(company='Example')
         self.assertEqual(created.user, self.user)
-        self.assertRedirects(response, reverse('application_detail', args=[created.pk]))
+        self.assertRedirects(
+            response,
+            reverse(
+                'application_detail',
+                args=[created.pk]
+            )
+        )
         dashboard = self.client.get(reverse('dashboard'))
         self.assertEqual(dashboard.context['applied_count'], 2)
+        self.assertEqual(dashboard.context['preparing_count'], 0)
         self.assertContains(dashboard, 'Example')
         self.assertNotContains(dashboard, 'Private Company')
-        for status, key in [('offer', 'offers_count'), ('interviewing', 'interviewing_count'), ('rejected', 'rejected_count')]:
+        for status, key in [
+            (
+                'preparing',
+                'preparing_count'
+            ),
+            (
+                'offer',
+                'offers_count'
+            ),
+            (
+                'interviewing',
+                'interviewing_count'
+            ),
+            (
+                'rejected',
+                'rejected_count'
+            )
+        ]:
             self.client.post(
                 reverse('application_update', args=[created.pk]),
                 self.data(status=status)
             )
-            self.assertEqual(self.client.get(reverse('dashboard')).context[key], 1)
+            self.assertEqual(
+                self.client.get(reverse('dashboard')).context[key],
+                1
+            )
+        # Count only this user's current Preparing applications, even with a search.
+        self.foreign.status = 'preparing'
+        self.foreign.save()
+        self.client.post(
+            reverse(
+                'application_update',
+                args=[created.pk]
+            ),
+            self.data(status='preparing')
+        )
+        dashboard = self.client.get(
+            reverse('dashboard'),
+            {'q': 'no matching company'}
+        )
+        self.assertEqual(dashboard.context['preparing_count'], 1)
+        self.assertEqual(dashboard.context['applied_count'], 1)
+        self.assertEqual(dashboard.context['rejected_count'], 0)
+        self.assertContains(dashboard, 'Preparing')
         self.assertEqual(
-            self.client.get(reverse('application_delete', args=[created.pk])).status_code,
+            self.client.get(reverse(
+                'application_delete',
+                args=[created.pk]
+            )).status_code,
             405
         )
         self.client.post(reverse('application_delete', args=[created.pk]))
         self.assertFalse(Application.objects.filter(pk=created.pk).exists())
         self.assertEqual(
-            self.client.get(reverse('dashboard')).context['rejected_count'],
+            self.client.get(reverse('dashboard')).context['preparing_count'],
             0
         )
 

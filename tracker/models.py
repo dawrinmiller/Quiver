@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db import transaction
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -73,10 +74,31 @@ class Event(models.Model):
         OTHER = 'other', 'Other'
 
     # Store the event's application, time, and optional description.
-    application = models.ForeignKey(Application, on_delete=models.CASCADE, related_name='events')
+    application = models.ForeignKey(
+        Application,
+        on_delete=models.CASCADE,
+        related_name='events'
+    )
     event_type = models.CharField(max_length=20, choices=Type.choices)
     event_date = models.DateTimeField('event date/time')
     description = models.TextField(blank=True)
+    schedule_version = models.PositiveIntegerField(default=1, editable=False)
+
+    # Allow a new reminder when the event time or type changes.
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            if self.pk:
+                previous = Event.objects.get(pk=self.pk)
+                fields = kwargs.get('update_fields')
+                changed = any(
+                    getattr(previous, field) != getattr(self, field)
+                    for field in ('event_date', 'event_type')
+                    if fields is None or field in fields
+                )
+                self.schedule_version = previous.schedule_version + int(changed)
+                if changed and fields is not None:
+                    kwargs['update_fields'] = set(fields) | {'schedule_version'}
+            super().save(*args, **kwargs)
 
     # Show events in order of when they happen.
     class Meta:
@@ -148,6 +170,52 @@ class Profile(models.Model):
     )
     biography = models.TextField(blank=True)
     linkedin_url = models.URLField(blank=True)
+    email_notifications_enabled = models.BooleanField(default=False)
+
+
+# Email delivery never changes the in-app notification or its read status.
+class EmailReminder(models.Model):
+    # List the possible delivery states for a reminder.
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        SENDING = 'sending', 'Sending'
+        SENT = 'sent', 'Sent'
+        FAILED = 'failed', 'Failed'
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='email_reminders'
+    )
+    schedule_version = models.PositiveIntegerField()
+    scheduled_for = models.DateTimeField()
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PENDING
+    )
+    attempts = models.PositiveSmallIntegerField(default=0)
+    claim_token = models.CharField(max_length=32, blank=True)
+    claimed_at = models.DateTimeField(null=True, blank=True)
+    next_attempt_at = models.DateTimeField(null=True, blank=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    last_error = models.CharField(max_length=80, blank=True)
+
+    # Keep only one delivery record for each event schedule.
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'event',
+                    'schedule_version'
+                ],
+                name='unique_email_event_schedule'
+            )
+        ]
 
 
 def document_path(instance, filename):

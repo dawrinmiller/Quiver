@@ -13,9 +13,12 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 import os
 from django.core.management.utils import get_random_secret_key
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Loads private settings from the project's .env file.
+load_dotenv(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -132,3 +135,32 @@ MEDIA_URL = '/private-media/'
 
 # Send visitors to the login page when they need to sign in.
 LOGIN_URL = 'login'
+
+
+# Configures the email service for password resets and reminders.
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend"
+)
+
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.resend.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "465"))
+
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "resend")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "False").lower() == "true"
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() == "true"
+
+EMAIL_TIMEOUT = 15
+
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL",
+    "Quiver <onboarding@resend.dev>"
+)
+
+# Password reset links expire after one hour.
+PASSWORD_RESET_TIMEOUT = 3600
+
+# Scheduled emails use this trusted base URL rather than a request's Host header.
+SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
