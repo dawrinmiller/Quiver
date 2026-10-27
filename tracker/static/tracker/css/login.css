@@ -30,6 +30,11 @@ body {
     margin-bottom: 32px;
 }
 
+/* Keep the logo link from changing the logo card's layout. */
+.logo-card a {
+    display: flex;
+}
+
 /* Set the login logo's displayed size. */
 .logo-image {
     height: 60px;

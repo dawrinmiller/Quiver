@@ -24,6 +24,12 @@ from .models import Application, Event, Notification, SecurityQuestion, Profile,
 from .notifications import create_event_notifications
 from .health import calculate_health, INTERVIEW_STATUSES
 
+# Show the launch page, or skip it for people who are already signed in.
+def launch_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    return render(request, 'tracker/launch.html')
+
 # Handle visits to the login page.
 def login_view(request):
 

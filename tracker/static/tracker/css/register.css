@@ -26,6 +26,11 @@ body {
     justify-content: center;
     margin-bottom: 24px;
 }
+
+/* Keep the logo link from changing the logo card's layout. */
+.logo-card a {
+    display: flex;
+}
  
 .logo-image {
     height: 44px;

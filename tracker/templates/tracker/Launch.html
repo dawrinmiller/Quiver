@@ -1,0 +1,49 @@
+{# Welcome visitors and send them to log in or create an account. #}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>
+            Quiver
+        </title>
+        <link rel="stylesheet" href="{% static 'tracker/css/launch.css' %}">
+    </head>
+    <body>
+        <main class="launch-container">
+            <div class="logo-card">
+                <img
+                    src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                    alt="Quiver logo"
+                    class="logo-image"
+                    >
+            </div>
+            <section class="launch-panel">
+                <h1 class="launch-title">
+                    Keep every job application in one place.
+                </h1>
+                <ul class="feature-list">
+                    <li>
+                        Track each application from applied to offer
+                    </li>
+                    <li>
+                        Get reminders before interviews and deadlines
+                    </li>
+                    <li>
+                        Keep your resumes and cover letters organized
+                    </li>
+                </ul>
+                <div class="launch-actions">
+                    <a href="{% url 'login' %}" class="launch-btn launch-btn-light">
+                        Login
+                    </a>
+                    <a href="{% url 'register' %}" class="launch-btn launch-btn-dark">
+                        Register
+                    </a>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
+ 

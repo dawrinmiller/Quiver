@@ -1,0 +1,135 @@
+/* Fill the window with the site's light blue and center the launch content. */
+html,
+body {
+    margin: 0;
+    min-height: 100vh;
+}
+ 
+body {
+    background-color: #bcd0ea;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ 
+/* Stack the logo and the welcome panel in one column. */
+.launch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 460px;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+ 
+/* Give the logo a light rounded card, like the login page. */
+.logo-card {
+    background-color: #fdfdf8;
+    border-radius: 16px;
+    padding: 22px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+ 
+.logo-image {
+    height: 56px;
+    width: auto;
+}
+ 
+/* Hold the welcome message in the same cream panel used across the site. */
+.launch-panel {
+    background-color: #f2f1e9;
+    border-radius: 16px;
+    padding: 32px 36px;
+    width: 100%;
+    box-sizing: border-box;
+}
+ 
+/* Style the main welcome line. */
+.launch-title {
+    margin: 0 0 22px 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #2b3e5c;
+    text-align: center;
+}
+ 
+/* List what Quiver does, each with a small round check mark. */
+.feature-list {
+    list-style: none;
+    margin: 0 0 28px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+ 
+.feature-list li {
+    position: relative;
+    padding-left: 32px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+}
+ 
+.feature-list li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #2b3e5c;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 22px;
+    text-align: center;
+}
+ 
+/* Stack the Login and Register buttons. */
+.launch-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+ 
+/* Shared rounded button shape. */
+.launch-btn {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 15px;
+    border-radius: 24px;
+    font-size: 17px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+}
+ 
+/* Login: white button with a navy outline so it stands out on the cream panel. */
+.launch-btn-light {
+    background-color: #ffffff;
+    color: #2b3e5c;
+    border: 2px solid #2b3e5c;
+}
+ 
+.launch-btn-light:hover {
+    background-color: #eef1f7;
+}
+ 
+/* Register: solid navy button, like the site's primary buttons. */
+.launch-btn-dark {
+    background-color: #2b3e5c;
+    color: #ffffff;
+    border: 2px solid #2b3e5c;
+}
+ 
+.launch-btn-dark:hover {
+    background-color: #223049;
+}

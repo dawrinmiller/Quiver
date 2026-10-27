@@ -10,12 +10,14 @@
     </head>
     <body>
         <div class="login-container">
-            <div class="logo-card">
-                <img
-                    src="{% static 'tracker/images/QuiverLightLogo.png' %}"
-                    alt="Quiver logo"
-                    class="logo-image"
-                >
+             <div class="logo-card">
+                <a href="{% url 'launch' %}">
+                    <img
+                        src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                        alt="Quiver logo, back to start"
+                        class="logo-image"
+                    >
+                </a>
             </div>
             <form method="POST" class="login-form">
                 {% csrf_token %}

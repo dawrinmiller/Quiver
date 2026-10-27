@@ -46,7 +46,8 @@ urlpatterns = [
         views.document_delete_view,
         name='document_delete'
     ),
-    path('', views.login_view, name='login'),
+    path('', views.launch_view, name='launch'),
+    path('login/', views.login_view, name='login'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('applications/new/', views.new_application_view, name='new_application'),
     path(
