@@ -1,0 +1,33 @@
+{# Choose an owned application before opening the existing event form. #}
+{% extends 'tracker/base.html' %}
+{# Set the browser title for adding an event. #}
+{% block title %}
+    Add Calendar Event
+{% endblock %}
+{# Show the page heading. #}
+{% block heading %}
+    Add Calendar Event
+{% endblock %}
+{% block content %}
+    <p>
+        Choose an application and date, then enter the event details on the next page.
+    </p>
+    {# Collect the application and date before opening the event form. #}
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">
+            Continue to Event Details
+        </button>
+    </form>
+    {# Help users add an application if they need one. #}
+    <p>
+        If you have no applications yet,
+        <a href="{% url 'new_application' %}">
+            add an application first
+        </a>
+        .
+    </p>
+    <a href="{% url 'job_search_calendar' %}">
+        Back to Calendar
+    </a>
+{% endblock %}

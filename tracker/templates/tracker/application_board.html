@@ -1,0 +1,152 @@
+{# Show the same saved applications grouped by their current status. #}
+{% extends 'tracker/base.html' %}
+{% load static %}
+{# Set the browser title for the board. #}
+{% block title %}
+    Application Board
+{% endblock %}
+{# Show the page heading. #}
+{% block heading %}
+    Application Board
+{% endblock %}
+{# Apply the wider board layout only to this page. #}
+{% block body_class %}
+    board-page
+{% endblock %}
+{# Load the board and calendar styles. #}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tracker/css/planning.css' %}">
+{% endblock %}
+{% block content %}
+    {# Explain how to move cards and enter a submission date. #}
+    <p>
+        Drag a card to another stage, or expand Update Status on a card to change its details.
+        Submitted stages require the actual submission date.
+    </p>
+    {# Search only changes which cards are visible. #}
+    <div class="planning-toolbar">
+        <label for="board-search">
+            Search company or job title
+        </label>
+        <input type="search" id="board-search" placeholder="Search applications...">
+        <button type="button" id="board-reset" class="planning-button">
+            Clear Search
+        </button>
+    </div>
+    {# Announce save results and errors. #}
+    <p id="board-message" role="status" aria-live="polite" aria-atomic="true">
+    </p>
+    {# Help users get started when they have no applications. #}
+    {% if not has_applications %}
+        <p>
+            You haven't added any applications yet.
+        </p>
+        <a href="{% url 'new_application' %}">
+            Add an application
+        </a>
+    {% endif %}
+    {# Show a message when the search finds no cards. #}
+    <p id="board-no-matches" hidden>
+        No applications match your search.
+    </p>
+    {# Keep every model status available, even when its column is empty. #}
+    <div class="board" id="application-board" aria-label="Application status columns">
+        {% for column in columns %}
+            <section
+                class="board-column status-{{ column.value }}"
+                data-column="{{ column.value }}"
+                aria-labelledby="heading-{{ column.value }}"
+            >
+                <h2 id="heading-{{ column.value }}">
+                    {{ column.label }}
+                    (
+                    <span data-column-count>
+                        {{ column.applications|length }}
+                    </span>
+                    )
+                </h2>
+                <p data-column-empty {% if column.applications %}hidden{% endif %}>
+                    No applications in this stage.
+                </p>
+                <div data-card-list>
+                    {% for application in column.applications %}
+                        {# Show the company, job title, and current progress. #}
+                        <article
+                            class="board-card"
+                            draggable="true"
+                            data-card
+                            data-status="{{ application.status }}"
+                            data-company="{{ application.company }}"
+                            data-role="{{ application.role }}"
+                            aria-labelledby="card-{{ application.pk }}"
+                        >
+                            <h3 id="card-{{ application.pk }}">
+                                <a href="{% url 'application_detail' application.pk %}">
+                                    {{ application.company }}
+                                </a>
+                            </h3>
+                            <p>
+                                {{ application.role }}
+                            </p>
+                            <p data-status-label>
+                                {{ application.get_status_display }}
+                            </p>
+                            <p>
+                                Submitted:
+                                <span data-date-label>
+                                    {{ application.date_submitted|date:'Y-m-d'|default:'Not submitted' }}
+                                </span>
+                            </p>
+                            {# Show the next event when one is scheduled. #}
+                            {% if application.next_step_date %}
+                                <p class="next-event">
+                                    Next event: {{ application.next_step_date|date:'M j, g:i a T' }}
+                                </p>
+                            {% endif %}
+                            {# Keep the card small until the user needs its editing controls. #}
+                            <details class="board-card-actions" data-card-actions>
+                                <summary>
+                                    Update Status
+                                </summary>
+                                {# This form remains the keyboard and touch alternative to dragging. #}
+                                <form method="post" action="{% url 'application_status' application.pk %}" data-status-form>
+                                    {% csrf_token %}
+                                    <label for="status-{{ application.pk }}">
+                                        Application status
+                                    </label>
+                                    <select name="status" id="status-{{ application.pk }}">
+                                        {# Offer the application statuses already used by Quiver. #}
+                                    {% for value, label in status_choices %}
+                                            <option value="{{ value }}" {% if value == application.status %}selected{% endif %}>
+                                                {{ label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="date-{{ application.pk }}">
+                                        Actual submission date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        name="date_submitted"
+                                        id="date-{{ application.pk }}"
+                                        value="{{ application.date_submitted|date:'Y-m-d' }}"
+                                        max="{{ today|date:'Y-m-d' }}"
+                                    >
+                                    <button type="submit">
+                                        Update Status
+                                    </button>
+                                </form>
+                                <a href="{% url 'application_update' application.pk %}">
+                                    Edit application details
+                                </a>
+                            </details>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endfor %}
+    </div>
+    {# Load the search, dragging, and status update controls. #}
+    <script src="{% static 'tracker/js/application_board.js' %}" defer>
+    </script>
+{% endblock %}

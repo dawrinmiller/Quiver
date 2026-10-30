@@ -4,6 +4,8 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        {# Keep the page readable on phone and tablet screens. #}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>
             Quiver -
             {% block title %}
@@ -13,7 +15,8 @@
         <link rel="stylesheet" href="{% static 'tracker/css/base.css' %}">
         {% block extra_css %}{% endblock %}
     </head>
-    <body>
+    {# Let individual pages choose their own layout styles. #}
+    <body class="{% block body_class %}{% endblock %}">
  
         <header class="topbar">
             <div class="topbar-left">
@@ -28,6 +31,13 @@
                 </a>
                 <a href="{% url 'upcoming_events' %}" class="pill-btn">
                     Upcoming Events
+                </a>
+                {# Open the board and calendar without replacing existing pages. #}
+                <a href="{% url 'application_board' %}" class="pill-btn">
+                    Board
+                </a>
+                <a href="{% url 'job_search_calendar' %}" class="pill-btn">
+                    Calendar
                 </a>
             </div>
  

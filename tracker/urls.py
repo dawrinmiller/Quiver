@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import planning
 from . import recovery
 from .email_recovery import RecoverySelectionView, EmailPasswordResetView
 from django.contrib.auth import views as auth_views
@@ -8,6 +9,30 @@ from django.urls import reverse_lazy
 
 # Connect each Quiver web address to the page or action it should open.
 urlpatterns = [
+    # Show the application board.
+    path(
+        'applications/board/',
+        planning.application_board_view,
+        name='application_board'
+    ),
+    # Save a status change from an application card.
+    path(
+        'applications/<int:pk>/status/',
+        planning.application_status_view,
+        name='application_status'
+    ),
+    # Show the monthly job search calendar.
+    path(
+        'calendar/',
+        planning.job_search_calendar_view,
+        name='job_search_calendar'
+    ),
+    # Choose an application before adding a calendar event.
+    path(
+        'calendar/events/new/',
+        planning.calendar_event_create_view,
+        name='calendar_event_create'
+    ),
     path(
         'forgot-password/',
         RecoverySelectionView.as_view(),

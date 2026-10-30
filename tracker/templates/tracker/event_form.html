@@ -23,12 +23,17 @@
     </p>
     <form method="post">
         {% csrf_token %}
+        {# Return to the calendar when the event was opened there. #}
+        {% if from_calendar %}
+            <input type="hidden" name="from_calendar" value="1">
+        {% endif %}
         {{ form.as_p }}
         <button type="submit">
             Save Event
         </button>
     </form>
-    <a href="{% url 'application_detail' application.pk %}">
+    {# Cancel back to the calendar or the application that opened this form. #}
+    <a href="{% if from_calendar %}{{ calendar_return_url }}{% else %}{% url 'application_detail' application.pk %}{% endif %}">
         Cancel
     </a>
 {% endblock %}

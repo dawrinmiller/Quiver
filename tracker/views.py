@@ -9,6 +9,8 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.db import transaction
 from django.http import FileResponse, Http404
 from pathlib import Path
+from datetime import datetime, time
+from django.utils.dateparse import parse_date
 
 from .forms import (
     ApplicationForm,
@@ -23,6 +25,7 @@ from .forms import (
 from .models import Application, Event, Notification, SecurityQuestion, Profile, Document
 from .notifications import create_event_notifications
 from .health import calculate_health, INTERVIEW_STATUSES
+from .planning import calendar_url
 
 # Show the launch page, or skip it for people who are already signed in.
 def launch_view(request):
@@ -161,13 +164,38 @@ def application_delete_view(request, pk):
 def event_form_view(request, application_pk, pk=None):
     application = get_object_or_404(Application, pk=application_pk, user=request.user)
     event = get_object_or_404(Event, pk=pk, application=application) if pk else None
-    form = EventForm(request.POST if request.method == 'POST' else None, instance=event)
+    # Calendar visits still use this same form and its existing validation.
+    from_calendar = (
+        request.GET.get('from_calendar') == '1'
+        or request.POST.get('from_calendar') == '1'
+    )
+    # Use the selected calendar date when opening a new event.
+    selected_day = timezone.localdate()
+    if from_calendar and not event:
+        try:
+            selected_day = parse_date(request.GET.get('calendar_date', '')) or selected_day
+        except ValueError:
+            pass
+    # Start a new calendar event at 9 a.m. on the selected day.
+    initial = {}
+    if from_calendar and not event:
+        initial['event_date'] = timezone.make_aware(
+            datetime.combine(selected_day, time(hour=9))
+        )
+    form = EventForm(
+        request.POST if request.method == 'POST' else None,
+        instance=event,
+        initial=initial
+    )
     if request.method == 'POST' and form.is_valid():
         event = form.save(commit=False)
         event.application = application
         event.save()
         # Recreate reminders from the edited event when its owner next opens a page.
         Notification.objects.filter(event=event, user=request.user).delete()
+        # Return calendar users to the saved event's day.
+        if from_calendar:
+            return redirect(calendar_url(event.event_date))
         return redirect('application_detail', pk=application.pk)
     return render(
         request,
@@ -175,7 +203,11 @@ def event_form_view(request, application_pk, pk=None):
         {
             'form': form,
             'application': application,
-            'event': event
+            'event': event,
+            'from_calendar': from_calendar,
+            'calendar_return_url': calendar_url(
+                event.event_date if event else selected_day
+            )
         }
     )
 
@@ -190,7 +222,12 @@ def event_delete_view(request, application_pk, pk):
         application_id=application_pk,
         application__user=request.user
     )
+    # Remember the event's day before deleting it.
+    return_url = calendar_url(event.event_date)
     event.delete()
+    # Return to the calendar when the deletion started there.
+    if request.POST.get('from_calendar') == '1':
+        return redirect(return_url)
     return redirect('application_detail', pk=application_pk)
 
 

@@ -1,0 +1,151 @@
+{# Show existing events in a month grid and a full list for the selected day. #}
+{% extends 'tracker/base.html' %}
+{% load static tz %}
+{# Set the browser title for the calendar. #}
+{% block title %}
+    Job Search Calendar
+{% endblock %}
+{# Show the calendar page heading. #}
+{% block heading %}
+    Job Search Calendar
+{% endblock %}
+{# Load the calendar styles. #}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tracker/css/planning.css' %}">
+{% endblock %}
+{% block content %}
+    {# Normal links keep month navigation available without JavaScript. #}
+    <nav class="calendar-navigation" aria-label="Calendar month navigation">
+        {# Link to the previous month when it is available. #}
+        {% if previous_url %}
+            <a class="planning-button" href="{{ previous_url }}">
+                Previous month
+            </a>
+        {% endif %}
+        <h2>
+            {{ month|date:'F Y' }}
+        </h2>
+        {# Link to the next month when it is available. #}
+        {% if next_url %}
+            <a class="planning-button" href="{{ next_url }}">
+                Next month
+            </a>
+        {% endif %}
+        <a class="planning-button" href="{% url 'job_search_calendar' %}">
+            Today
+        </a>
+    </nav>
+    {# Explain the displayed times and how to select a day. #}
+    <p>
+        {% get_current_timezone as current_timezone %}
+        Times are shown in EDT. Select a date to view all its events.
+    </p>
+    {# Explain when the month has no scheduled events. #}
+    {% if not has_events %}
+        <p>
+            No events scheduled for this month.
+        </p>
+    {% endif %}
+    <div class="calendar-grid" aria-label="{{ month|date:'F Y' }} calendar">
+        {# Label the seven days of the week. #}
+        {% for weekday in weekdays %}
+            <div class="calendar-weekday">
+                {{ weekday }}
+            </div>
+        {% endfor %}
+        {# Show each calendar week and its dates. #}
+        {% for week in weeks %}
+            {% for cell in week %}
+                {# Show a date or leave a blank space outside the month. #}
+                {% if cell %}
+                    <div
+                        class="calendar-day {% if cell.selected %}selected-day{% endif %} {% if cell.today %}today{% endif %}"
+                    >
+                        <a
+                            class="calendar-date"
+                            href="{{ cell.url }}#selected-day"
+                            aria-label="{{ cell.date|date:'F j, Y' }}: {{ cell.count }} events"
+                            {% if cell.today %}aria-current="date"{% endif %}
+                        >
+                            {{ cell.date.day }}
+                        </a>
+                        {# On phones, a small count replaces the longer event labels. #}
+                        {% if cell.count %}
+                            <span class="mobile-event-count">
+                                {{ cell.count }} event{{ cell.count|pluralize }}
+                            </span>
+                        {% endif %}
+                        <div class="calendar-previews">
+                            {# Link each preview to its full event details. #}
+                            {% for event in cell.events %}
+                                <a class="calendar-event event-{{ event.event_type }}" href="{{ cell.url }}#event-{{ event.pk }}">
+                                    {{ event.application.company }} - {{ event.get_event_type_display }}
+                                    <span>
+                                        {{ event.event_date|date:'g:i a T' }}
+                                    </span>
+                                </a>
+                            {% endfor %}
+                            {# Link to the remaining events on busy days. #}
+                            {% if cell.more %}
+                                <a href="{{ cell.url }}#selected-day">
+                                    +{{ cell.more }} more
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="calendar-day calendar-blank" aria-hidden="true">
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {# The selected day shows complete event details without a separate event store. #}
+    <section id="selected-day" aria-labelledby="selected-day-heading" tabindex="-1">
+        <h2 id="selected-day-heading">
+            {{ selected_day|date:'l, F j, Y' }}
+        </h2>
+        <a class="planning-button" href="{% url 'calendar_event_create' %}?date={{ selected_day|date:'Y-m-d' }}">
+            Add Event
+        </a>
+        {# Show all event details for the selected day. #}
+        {% for event in selected_events %}
+            <article class="calendar-detail event-{{ event.event_type }}" id="event-{{ event.pk }}" tabindex="-1">
+                <h3>
+                    {{ event.application.company }} - {{ event.get_event_type_display }}
+                </h3>
+                <p>
+                    Job title: {{ event.application.role }}
+                </p>
+                <p>
+                    Scheduled: {{ event.event_date|date:'M j, Y, g:i a T' }}
+                </p>
+                <p>
+                    {{ event.description|linebreaksbr }}
+                </p>
+                <a href="{% url 'application_detail' event.application_id %}">
+                    View Application
+                </a>
+                <a href="{% url 'event_update' event.application_id event.pk %}?from_calendar=1">
+                    Edit Event
+                </a>
+                {# Use the existing event deletion action. #}
+                <form
+                    method="post"
+                    action="{% url 'event_delete' event.application_id event.pk %}"
+                    onsubmit="return confirm('Delete this event?');"
+                >
+                    {% csrf_token %}
+                    <input type="hidden" name="from_calendar" value="1">
+                    <button type="submit">
+                        Delete Event
+                    </button>
+                </form>
+            </article>
+        {% empty %}
+            <p>
+                No events scheduled for this day.
+            </p>
+        {% endfor %}
+    </section>
+{% endblock %}

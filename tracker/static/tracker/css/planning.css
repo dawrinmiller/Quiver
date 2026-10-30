@@ -1,0 +1,389 @@
+/* Give the board and calendar room without changing other pages. */
+.page-main {
+    max-width: 1400px;
+}
+
+/* Keep search and navigation controls spaced and able to wrap. */
+.planning-toolbar,
+.calendar-navigation {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Let the search field use the available space. */
+.planning-toolbar input {
+    flex: 1;
+    min-width: 140px;
+    padding: 12px;
+    border: 1px solid #66758a;
+    border-radius: 8px;
+    font: inherit;
+}
+
+/* Give links and buttons the same appearance. */
+.planning-button {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid #66758a;
+    border-radius: 12px;
+    background: #fff;
+    color: #2b3e5c;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* Show a visible focus outline on all keyboard controls. */
+.page-card :is(a, button, input, select, summary, [tabindex]):focus-visible {
+    outline: 3px solid #185da1;
+    outline-offset: 3px;
+}
+
+/* Use the full page width so all seven stages fit on a desktop. */
+.board-page .page-main {
+    max-width: none;
+    padding: 24px 16px;
+}
+
+/* Keep a little space around the wide board. */
+.board-page .page-card {
+    padding: 24px 20px;
+}
+
+/* Fit the columns into the available width instead of scrolling sideways. */
+.board {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    padding: 6px 0 12px;
+    align-items: start;
+}
+
+/* Give each status column a readable background and border. */
+.board-column {
+    min-width: 0;
+    min-height: 180px;
+    padding: 8px;
+    background: #e3e9f2;
+    border-radius: 12px;
+    border-top: 6px solid #4e607a;
+    box-sizing: border-box;
+}
+
+/* Keep status headings compact and let long names wrap. */
+.page-card .board-column h2 {
+    font-size: 15px;
+    margin: 0 0 10px;
+    padding: 0;
+    border: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Mark Preparing applications with a gray border. */
+.status-preparing {
+    border-color: #626262;
+}
+
+/* Mark Applied applications with a blue border. */
+.status-applied {
+    border-color: #185da1;
+}
+
+/* Mark Online Interview applications with a purple border. */
+.status-online_interview {
+    border-color: #68409a;
+}
+
+/* Mark On-site Interview applications with a pink-purple border. */
+.status-onsite_interview {
+    border-color: #854070;
+}
+
+/* Mark Interviewing applications with a dark purple border. */
+.status-interviewing {
+    border-color: #673b80;
+}
+
+/* Mark Offer applications with a green border. */
+.status-offer {
+    border-color: #226339;
+}
+
+/* Mark Rejected applications with a red border. */
+.status-rejected {
+    border-color: #9b2020;
+}
+
+/* Reduce card spacing so more applications fit on the screen. */
+.board-card {
+    min-width: 0;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.35;
+    background: #fff;
+    border: 1px solid #bec7d3;
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+    cursor: grab;
+}
+
+/* Keep company names clear without extra space. */
+.board-card h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* Use small gaps between the card details. */
+.board-card p {
+    margin: 4px 0;
+}
+
+/* Keep status, date, and event text compact. */
+.board-card p[data-status-label],
+.board-card p:has([data-date-label]),
+/* Emphasize the next scheduled event. */
+.board-card .next-event {
+    font-size: 12px;
+}
+
+/* Show the full status form only when the user opens the card controls. */
+.board-card-actions {
+    margin-top: 6px;
+}
+
+/* Make the expandable controls easy to recognize. */
+.board-card-actions summary {
+    padding: 4px 0;
+    color: #3949ab;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Remove the gap after the last card in a column. */
+.board-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Emphasize the next scheduled event. */
+.board-card .next-event {
+    font-weight: 600;
+}
+
+/* Fade a card while it is being saved or dragged. */
+.board-card[aria-busy="true"],
+.board-card.dragging {
+    opacity: .6;
+}
+
+/* Highlight the column that can receive a card. */
+.board-column.drop-target {
+    outline: 3px dashed #185da1;
+    outline-offset: -3px;
+}
+
+/* Place the form controls in a clear vertical order. */
+.board-card form {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0;
+    min-width: 0;
+}
+
+/* Let form controls shrink with the cards while keeping their text readable. */
+.page-card .board-card :is(input, select) {
+    min-width: 0;
+    width: 100%;
+    padding: 8px 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+/* Keep card form labels compact and readable. */
+.page-card .board-card label {
+    font-size: 13px;
+}
+
+/* Fit the status button inside a narrow card. */
+.page-card .board-card button[type="submit"] {
+    padding: 10px 6px;
+    font-size: 13px;
+    white-space: normal;
+}
+
+/* Wrap the stages on smaller screens instead of making the cards too narrow. */
+@media (max-width: 1100px) {
+    .board {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* Use two columns on small tablets. */
+@media (max-width: 760px) {
+    .board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Use one readable column on phones. */
+@media (max-width: 480px) {
+    .board {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Keep seven equal weekday columns and let long event names wrap. */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 28px;
+}
+
+/* Center weekday labels above the calendar. */
+.calendar-weekday {
+    text-align: center;
+    font-weight: 600;
+    padding: 8px 0;
+}
+
+/* Give each date its own readable space. */
+.calendar-day {
+    min-height: 140px;
+    padding: 8px;
+    border: 1px solid #bac4d3;
+    border-radius: 6px;
+    background: #fff;
+    min-width: 0;
+}
+
+/* Shade spaces outside the current month. */
+.calendar-blank {
+    background: #e6e8ec;
+}
+
+/* Make date links easy to see and select. */
+.calendar-date {
+    display: inline-block;
+    padding: 4px 8px;
+    font-weight: 700;
+}
+
+/* Circle the current date. */
+.today .calendar-date {
+    border: 2px solid #2b3e5c;
+    border-radius: 50%;
+}
+
+/* Outline the day whose events are shown below. */
+.selected-day {
+    outline: 3px solid #185da1;
+    outline-offset: -3px;
+}
+
+/* Align the month heading with the navigation links. */
+.calendar-navigation h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 auto;
+}
+
+/* Event text identifies each type as well as its color. */
+.calendar-event,
+/* Give full event details space below the grid. */
+.calendar-detail {
+    display: block;
+    border-left: 5px solid #185da1;
+    background: #eef3fb;
+    padding: 8px;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+
+/* Use compact text for event previews. */
+.calendar-event {
+    font-size: 13px;
+}
+
+/* Show event times below their labels. */
+.calendar-event span {
+    display: block;
+}
+
+/* Give full event details space below the grid. */
+.calendar-detail {
+    padding: 16px;
+    margin-top: 18px;
+    scroll-margin-top: 16px;
+}
+
+/* Separate the links for viewing or editing events. */
+.calendar-detail a {
+    display: inline-block;
+    margin: 4px 16px 4px 0;
+}
+
+/* Use purple to help identify interview events. */
+.event-interview {
+    border-left-color: #68409a;
+    background: #f1eafa;
+}
+
+/* Use red to help identify deadlines. */
+.event-deadline {
+    border-left-color: #9b2020;
+    background: #faeded;
+}
+
+/* Use teal to help identify follow-up events. */
+.event-follow_up {
+    border-left-color: #11685e;
+    background: #e4f3ef;
+}
+
+/* Hide the compact event count on larger screens. */
+.mobile-event-count {
+    display: none;
+}
+
+/* Use compact day cells and the full selected-day list on phones. */
+@media (max-width: 700px) {
+    .page-main {
+        padding: 20px 10px;
+    }
+
+    .page-card {
+        padding: 22px 12px;
+    }
+
+    .topbar {
+        padding: 16px;
+    }
+
+    .calendar-day {
+        min-height: 75px;
+        padding: 3px;
+    }
+
+    .calendar-date {
+        padding: 3px;
+    }
+
+    .calendar-previews {
+        display: none;
+    }
+
+    .mobile-event-count {
+        display: block;
+        font-size: 11px;
+        overflow-wrap: anywhere;
+    }
+
+    .calendar-navigation h2 {
+        width: 100%;
+        order: -1;
+        text-align: center;
+    }
+}

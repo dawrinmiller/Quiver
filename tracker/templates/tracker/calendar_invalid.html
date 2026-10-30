@@ -1,0 +1,21 @@
+{# Explain an invalid calendar link without showing an internal error. #}
+{% extends 'tracker/base.html' %}
+{# Show that the calendar link needs a valid date. #}
+{% block heading %}
+    Check Calendar Date
+{% endblock %}
+{% block content %}
+    <p>
+        Choose a valid date between 1900 and 2100.
+    </p>
+    {# Let the user correct the requested calendar date. #}
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">
+            Open Calendar
+        </button>
+    </form>
+    <a href="{% url 'job_search_calendar' %}">
+        Return to Today
+    </a>
+{% endblock %}
