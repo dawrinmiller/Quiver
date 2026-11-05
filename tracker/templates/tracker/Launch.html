@@ -1,4 +1,4 @@
-{# Welcome visitors and send them to log in or create an account. #}
+{# Welcome visitors with a landing page that leads to login or registration. #}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -6,44 +6,120 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>
-            Quiver
+            Quiver - Job Application Tracker
         </title>
         <link rel="stylesheet" href="{% static 'tracker/css/launch.css' %}">
     </head>
     <body>
-        <main class="launch-container">
-            <div class="logo-card">
-                <img
-                    src="{% static 'tracker/images/QuiverLightLogo.png' %}"
-                    alt="Quiver logo"
-                    class="logo-image"
-                    >
-            </div>
-            <section class="launch-panel">
-                <h1 class="launch-title">
-                    Keep every job application in one place.
-                </h1>
-                <ul class="feature-list">
-                    <li>
-                        Track each application from applied to offer
-                    </li>
-                    <li>
-                        Get reminders before interviews and deadlines
-                    </li>
-                    <li>
-                        Keep your resumes and cover letters organized
-                    </li>
-                </ul>
-                <div class="launch-actions">
-                    <a href="{% url 'login' %}" class="launch-btn launch-btn-light">
+        <header class="nav">
+            <div class="nav-inner">
+                <a href="{% url 'launch' %}" class="logo-card">
+                    <img
+                        src="{% static 'tracker/images/QuiverLightLogo.png' %}"
+                        alt="Quiver logo"
+                        >
+                </a>
+                <div class="nav-actions">
+                    <a href="{% url 'login' %}" class="btn btn-light">
                         Login
                     </a>
-                    <a href="{% url 'register' %}" class="launch-btn launch-btn-dark">
+                    <a href="{% url 'register' %}" class="btn btn-sky">
                         Register
                     </a>
                 </div>
+            </div>
+        </header>
+        <main>
+            <section class="hero">
+                <div class="hero-text">
+                    <span class="eyebrow">
+                        Job search tracker
+                    </span>
+                    <h1>
+                        Keep every job application in
+                        <span class="accent">one place.</span>
+                    </h1>
+                    <p class="hero-sub">
+                        Track each application from applied to offer, get reminders before interviews, and keep your resumes and cover letters ready.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{% url 'register' %}" class="btn btn-dark btn-lg">
+                            Get started
+                        </a>
+                        <a href="{% url 'login' %}" class="btn btn-outline btn-lg">
+                            Login
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="mock-window">
+                        <div class="mock-bar">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="mock-stats">
+                            <div class="mock-stat">Applied<b>12</b></div>
+                            <div class="mock-stat">Interviewing<b>3</b></div>
+                            <div class="mock-stat">Offers<b>1</b></div>
+                            <div class="mock-stat">Rejected<b>5</b></div>
+                        </div>
+                        <div class="mock-row head">
+                            <span>Company</span><span>Role</span><span>Status</span>
+                        </div>
+                        <div class="mock-row">
+                            <span>acme co.</span><span>product tester</span>
+                            <span class="pill interview">interview</span>
+                        </div>
+                        <div class="mock-row">
+                            <span>initech</span><span>data analyst</span>
+                            <span class="pill applied">applied</span>
+                        </div>
+                        <div class="mock-row">
+                            <span>globex</span><span>designer</span>
+                            <span class="pill offer">offer</span>
+                        </div>
+                    </div>
+                    <div class="toast">
+                        <div class="toast-icon">&#128276;</div>
+                        <div>
+                            <b>Interview tomorrow</b>
+                            <span>acme co. &middot; 10:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="features" id="features">
+                <h2>
+                    Everything your search needs
+                </h2>
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <div class="feature-icon">&#128203;</div>
+                        <h3>Track every application</h3>
+                        <p>See each company, role, and status in one searchable dashboard, from applied to offer.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">&#128276;</div>
+                        <h3>Never miss a date</h3>
+                        <p>Add interviews and deadlines to each application and get reminders when they are coming up.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">&#128196;</div>
+                        <h3>Keep documents ready</h3>
+                        <p>Store your resumes and cover letters on your profile so they are easy to find.</p>
+                    </article>
+                </div>
+            </section>
+            <section class="cta-band" id="get-started">
+                <h2>
+                    Ready to get organized?
+                </h2>
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+                    Create your account
+                </a>
             </section>
         </main>
+        <footer class="footer">
+            Quiver &mdash; job application tracker
+        </footer>
     </body>
 </html>
- 

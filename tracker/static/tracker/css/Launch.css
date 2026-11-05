@@ -1,135 +1,431 @@
-/* Fill the window with the site's light blue and center the launch content. */
-html,
+/* Shared colors taken from the rest of the site. */
+:root {
+    --navy: #2b3e5c;
+    --navy-dark: #223049;
+    --sky: #bcd0ea;
+    --cream: #f2f1e9;
+    --paper: #fdfdf8;
+    --ink: #222;
+}
+ 
+* {
+    box-sizing: border-box;
+}
+ 
+html {
+    scroll-behavior: smooth;
+}
+ 
+/* Soft light blue backdrop with gentle lighter patches. */
 body {
     margin: 0;
     min-height: 100vh;
-}
- 
-body {
-    background-color: #bcd0ea;
     font-family: 'Segoe UI', Arial, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at 88% 8%, #dbe6f6 0, transparent 38%),
+        radial-gradient(circle at 4% 55%, #cfdef2 0, transparent 34%),
+        var(--sky);
 }
  
-/* Stack the logo and the welcome panel in one column. */
-.launch-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 460px;
-    padding: 40px 20px;
-    box-sizing: border-box;
-}
- 
-/* Give the logo a light rounded card, like the login page. */
-.logo-card {
-    background-color: #fdfdf8;
-    border-radius: 16px;
-    padding: 22px 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 24px;
-}
- 
-.logo-image {
-    height: 56px;
-    width: auto;
-}
- 
-/* Hold the welcome message in the same cream panel used across the site. */
-.launch-panel {
-    background-color: #f2f1e9;
-    border-radius: 16px;
-    padding: 32px 36px;
-    width: 100%;
-    box-sizing: border-box;
-}
- 
-/* Style the main welcome line. */
-.launch-title {
-    margin: 0 0 22px 0;
-    font-size: 24px;
-    font-weight: 600;
-    line-height: 1.3;
-    color: #2b3e5c;
-    text-align: center;
-}
- 
-/* List what Quiver does, each with a small round check mark. */
-.feature-list {
-    list-style: none;
-    margin: 0 0 28px 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
- 
-.feature-list li {
-    position: relative;
-    padding-left: 32px;
-    font-size: 16px;
-    line-height: 1.4;
-    color: #333;
-}
- 
-.feature-list li::before {
-    content: "\2713";
-    position: absolute;
-    left: 0;
-    top: 1px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background-color: #2b3e5c;
-    color: #ffffff;
-    font-size: 13px;
-    line-height: 22px;
-    text-align: center;
-}
- 
-/* Stack the Login and Register buttons. */
-.launch-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
- 
-/* Shared rounded button shape. */
-.launch-btn {
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 15px;
+/* ---- Buttons ---- */
+.btn {
+    display: inline-block;
+    padding: 11px 22px;
+    border: 2px solid transparent;
     border-radius: 24px;
-    font-size: 17px;
-    font-weight: 500;
-    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
     text-decoration: none;
+    transition: transform 0.15s, background-color 0.15s;
 }
  
-/* Login: white button with a navy outline so it stands out on the cream panel. */
-.launch-btn-light {
+.btn:hover {
+    transform: translateY(-2px);
+}
+ 
+.btn-lg {
+    padding: 14px 32px;
+    font-size: 17px;
+}
+ 
+.btn-sky {
+    background-color: var(--sky);
+    color: var(--navy);
+}
+ 
+.btn-sky:hover {
+    background-color: #d3e0f1;
+}
+ 
+.btn-light {
     background-color: #ffffff;
-    color: #2b3e5c;
-    border: 2px solid #2b3e5c;
+    color: var(--navy);
 }
  
-.launch-btn-light:hover {
+.btn-light:hover {
     background-color: #eef1f7;
 }
  
-/* Register: solid navy button, like the site's primary buttons. */
-.launch-btn-dark {
-    background-color: #2b3e5c;
+.btn-dark {
+    background-color: var(--navy);
     color: #ffffff;
-    border: 2px solid #2b3e5c;
 }
  
-.launch-btn-dark:hover {
-    background-color: #223049;
+.btn-dark:hover {
+    background-color: var(--navy-dark);
+}
+ 
+.btn-outline {
+    border-color: var(--navy);
+    color: var(--navy);
+}
+ 
+.btn-outline:hover {
+    background-color: rgba(43, 62, 92, 0.08);
+}
+ 
+/* ---- Top navigation bar ---- */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--navy);
+}
+ 
+.nav-inner {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+ 
+.logo-card {
+    display: flex;
+    padding: 8px 18px;
+    border-radius: 12px;
+    background-color: var(--paper);
+}
+ 
+.logo-card img {
+    display: block;
+    height: 28px;
+    width: auto;
+}
+ 
+.nav-links {
+    display: flex;
+    gap: 28px;
+}
+ 
+.nav-links a {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+}
+ 
+.nav-links a:hover {
+    text-decoration: underline;
+}
+ 
+.nav-actions {
+    display: flex;
+    gap: 12px;
+}
+ 
+/* ---- Hero ---- */
+.hero {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 72px 24px 96px;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+    align-items: center;
+}
+ 
+.eyebrow {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background-color: var(--paper);
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+ 
+.hero h1 {
+    margin: 0 0 20px 0;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+}
+ 
+/* Highlight the key words like a marker stroke. */
+.accent {
+    padding: 0 4px;
+    background: linear-gradient(transparent 60%, var(--paper) 60%);
+}
+ 
+.hero-sub {
+    max-width: 520px;
+    margin: 0 0 32px 0;
+    font-size: 19px;
+    line-height: 1.55;
+    color: #33435c;
+}
+ 
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+ 
+/* ---- Dashboard preview built from plain HTML and CSS ---- */
+.hero-visual {
+    position: relative;
+}
+ 
+.mock-window {
+    padding: 16px 18px 20px;
+    border-radius: 18px;
+    background-color: var(--paper);
+    box-shadow: 0 30px 60px rgba(43, 62, 92, 0.28);
+    transform: perspective(1200px) rotateY(-7deg) rotateX(2deg);
+    animation: float 7s ease-in-out infinite;
+}
+ 
+.mock-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+ 
+.mock-bar span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #d5d9e2;
+}
+ 
+.mock-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+ 
+.mock-stat {
+    padding: 10px 4px;
+    border-radius: 10px;
+    background-color: var(--cream);
+    font-size: 11px;
+    text-align: center;
+    color: #444;
+}
+ 
+.mock-stat b {
+    display: block;
+    margin-top: 2px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+}
+ 
+.mock-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.3fr 0.9fr;
+    gap: 8px;
+    align-items: center;
+    padding: 11px 12px;
+    border-top: 1px solid #e3e1d6;
+    font-size: 13px;
+}
+ 
+.mock-row.head {
+    border-top: none;
+    border-radius: 8px;
+    background-color: var(--cream);
+    font-weight: 700;
+}
+ 
+.pill {
+    justify-self: start;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+ 
+.pill.applied {
+    background-color: #dbe4f3;
+    color: var(--navy);
+}
+ 
+.pill.interview {
+    background-color: #fde9b8;
+    color: #7a5a00;
+}
+ 
+.pill.offer {
+    background-color: #cdebd5;
+    color: #1f6b3a;
+}
+ 
+/* Floating reminder card that overlaps the preview. */
+.toast {
+    position: absolute;
+    left: -28px;
+    bottom: -26px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 18px;
+    border-radius: 14px;
+    background-color: #ffffff;
+    box-shadow: 0 16px 36px rgba(43, 62, 92, 0.25);
+    animation: float 7s ease-in-out -3s infinite;
+}
+ 
+.toast-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--sky);
+}
+ 
+.toast b {
+    display: block;
+    font-size: 14px;
+}
+ 
+.toast span {
+    font-size: 13px;
+    color: #555;
+}
+ 
+@keyframes float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -10px; }
+}
+ 
+/* ---- Features ---- */
+.features {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 0 24px 88px;
+    text-align: center;
+}
+ 
+.features h2 {
+    margin: 0 0 36px 0;
+    font-size: clamp(28px, 3.5vw, 38px);
+    color: var(--navy);
+}
+ 
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    text-align: left;
+}
+ 
+.feature-card {
+    padding: 30px 28px;
+    border-radius: 18px;
+    background-color: var(--cream);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+ 
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 36px rgba(43, 62, 92, 0.18);
+}
+ 
+.feature-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 18px;
+    border-radius: 14px;
+    background-color: var(--navy);
+    font-size: 24px;
+}
+ 
+.feature-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: var(--navy);
+}
+ 
+.feature-card p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.55;
+    color: #444;
+}
+ 
+/* ---- Closing call to action and footer ---- */
+.cta-band {
+    padding: 64px 24px;
+    background-color: var(--navy);
+    color: #ffffff;
+    text-align: center;
+}
+ 
+.cta-band h2 {
+    margin: 0 0 24px 0;
+    font-size: clamp(26px, 3.5vw, 36px);
+}
+ 
+.footer {
+    padding: 18px;
+    background-color: var(--navy-dark);
+    color: #b9c4d6;
+    font-size: 14px;
+    text-align: center;
+}
+ 
+/* ---- Smaller screens ---- */
+@media (max-width: 880px) {
+    .hero {
+        grid-template-columns: 1fr;
+        padding-top: 48px;
+    }
+ 
+    .nav-links {
+        display: none;
+    }
+ 
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+ 
+    .toast {
+        left: 12px;
+    }
+}
+ 
+/* Respect people who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+    .mock-window,
+    .toast {
+        animation: none;
+    }
+ 
+    html {
+        scroll-behavior: auto;
+    }
 }
