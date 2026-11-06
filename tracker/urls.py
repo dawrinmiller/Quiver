@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import planning
+from . import thank_you
 from . import recovery
 from .email_recovery import RecoverySelectionView, EmailPasswordResetView
 from django.contrib.auth import views as auth_views
@@ -9,6 +10,12 @@ from django.urls import reverse_lazy
 
 # Connect each Quiver web address to the page or action it should open.
 urlpatterns = [
+    # Open the owner's interview thank-you email form.
+    path(
+        'events/<int:pk>/thank-you/',
+        thank_you.compose,
+        name='interview_thank_you'
+    ),
     # Show the application board.
     path(
         'applications/board/',

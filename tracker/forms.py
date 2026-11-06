@@ -68,13 +68,62 @@ class ApplicationForm(forms.ModelForm):
 
 # Choose the event details people can enter and provide a date-and-time field.
 class EventForm(forms.ModelForm):
+    # Ask before removing saved contacts when an interview becomes another event.
+    confirm_clear_contacts = forms.BooleanField(
+        required=False,
+        label='Clear interviewer contacts when changing this interview to another event type.'
+    )
+
+    # Show the contact-clearing checkbox only when it is needed.
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not (self.instance.pk and self.instance.is_interview and (self.instance.interviewer_name or self.instance.interviewer_email)):
+            self.fields['confirm_clear_contacts'].widget = forms.HiddenInput()
+
+    # Choose the form fields, labels, and input styles.
     class Meta:
         model = Event
-        fields = ['event_type', 'event_date', 'description']
-        widgets = {
-            'event_date': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
-            'description': forms.Textarea(attrs={'rows': 3})
+        fields = [
+            'event_type',
+            'event_date',
+            'description',
+            'interviewer_name',
+            'interviewer_email'
+        ]
+        labels = {
+            'interviewer_name': 'Interviewer Name (Optional)',
+            'interviewer_email': 'Interviewer Email (Optional)'
         }
+        widgets = {
+            'event_date': forms.DateTimeInput(
+                format='%Y-%m-%dT%H:%M',
+                attrs={'type': 'datetime-local'}
+            ),
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'interviewer_name': forms.TextInput(attrs={'placeholder': "Enter interviewer's name"}),
+            'interviewer_email': forms.EmailInput(attrs={'placeholder': "Enter interviewer's email address"})
+        }
+
+    # Keep interviewer contacts attached only to interview events.
+    def clean(self):
+        data = super().clean()
+        if data.get('event_type') != Event.Type.INTERVIEW:
+            if self.instance.pk and self.instance.is_interview:
+                if (self.instance.interviewer_name or self.instance.interviewer_email) and not data.get('confirm_clear_contacts'):
+                    self.add_error(
+                        'confirm_clear_contacts',
+                        'Confirm clearing the saved interviewer contacts before changing the event type.'
+                    )
+                self.instance.interviewer_name = ''
+                self.instance.interviewer_email = ''
+                data['interviewer_name'] = ''
+                data['interviewer_email'] = ''
+            elif data.get('interviewer_name') or data.get('interviewer_email'):
+                self.add_error(
+                    None,
+                    'Interviewer contact information is only available for interviews.'
+                )
+        return data
 
     # Require a future time for new or rescheduled events.
     def clean_event_date(self):
@@ -201,3 +250,27 @@ class DocumentForm(forms.ModelForm):
         upload = self.cleaned_data['file']
         validate_document(upload)
         return upload
+
+
+# Collect the email text and the user's permission to send it.
+class ThankYouForm(forms.Form):
+    # Collect the draft, message, and the user's confirmation.
+    token = forms.UUIDField(widget=forms.HiddenInput)
+    subject = forms.CharField(max_length=200, strip=False)
+    body = forms.CharField(
+        max_length=10000,
+        label='Message',
+        widget=forms.Textarea(attrs={'rows': 14})
+    )
+    confirm_send = forms.BooleanField(label='I have reviewed this email and confirm sending it.')
+    confirm_another = forms.BooleanField(
+        required=False,
+        label='I confirm sending another email for this interview.'
+    )
+
+    # Keep the subject on one line and reject empty subjects.
+    def clean_subject(self):
+        value = self.cleaned_data['subject']
+        if any(char in value for char in ('\r', '\n', '\x00')) or not value.strip():
+            raise forms.ValidationError('The subject must be a single nonempty line without control characters.')
+        return value.strip()

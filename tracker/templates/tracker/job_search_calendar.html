@@ -123,6 +123,8 @@
                 <p>
                     {{ event.description|linebreaksbr }}
                 </p>
+                {# Show interviewer contacts and thank-you email actions. #}
+                {% include 'tracker/interview_details.html' %}
                 <a href="{% url 'application_detail' event.application_id %}">
                     View Application
                 </a>

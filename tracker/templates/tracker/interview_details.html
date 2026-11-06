@@ -1,0 +1,54 @@
+{# Show saved interviewer details and thank-you email options. #}
+{% if event.is_interview %}
+    {# Show the interviewer name only when it was saved. #}
+    {% if event.interviewer_name %}
+        <p>
+            Interviewer:
+            {{ event.interviewer_name }}
+        </p>
+    {% endif %}
+    {# Show the interviewer email only when it was saved. #}
+    {% if event.interviewer_email %}
+        <p>
+            Email:
+            {{ event.interviewer_email }}
+        </p>
+    {% endif %}
+    {# Find the previous email attempts for this interview. #}
+    {% with sent=event.sent_thank_you latest=event.latest_thank_you %}
+        {# Show when a thank-you email was successfully sent. #}
+        {% if sent %}
+            <p>
+                Thank-You Email Sent &mdash;
+                {{ sent.sent_at|date:'M j, Y, g:i a T' }}
+            </p>
+        {% endif %}
+        {# Explain the latest attempt if it was not successful. #}
+        {% if latest and latest.status != 'sent' %}
+            <p>
+                {{ latest.get_status_display }}
+                {% if latest.failure_info %}
+                    :
+                    {{ latest.failure_info }}
+                {% endif %}
+            </p>
+        {% endif %}
+        {# Offer email actions only after the interview has passed. #}
+        {% if event.thank_you_eligible %}
+            <a href="{% url 'interview_thank_you' event.pk %}">
+                {% if sent or latest.status == 'unknown' or latest.status == 'sending' %}
+                    Send Another Email / View History
+                {% else %}
+                    Send Thank-You Email
+                {% endif %}
+            </a>
+        {% elif event.interview_completed %}
+            <p>
+                Add interviewer email to send a thank-you.
+                <a href="{% url 'event_update' event.application_id event.pk %}">
+                    Edit Event
+                </a>
+            </p>
+        {% endif %}
+    {% endwith %}
+{% endif %}

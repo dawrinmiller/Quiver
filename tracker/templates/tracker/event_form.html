@@ -1,6 +1,6 @@
 {# Show a form for adding or editing an application's event. #}
 {% extends 'tracker/base.html' %}
-{% load tz %}
+{% load tz static %}
 {% block heading %}
     {% if event %}
         Edit
@@ -28,6 +28,7 @@
             <input type="hidden" name="from_calendar" value="1">
         {% endif %}
         {{ form.as_p }}
+        <p>Interviewer contacts apply only to interviews. Saving a different event type clears existing interviewer contacts.</p>
         <button type="submit">
             Save Event
         </button>
@@ -36,4 +37,6 @@
     <a href="{% if from_calendar %}{{ calendar_return_url }}{% else %}{% url 'application_detail' application.pk %}{% endif %}">
         Cancel
     </a>
+    {# Show contact fields only when Interview is selected. #}
+    <script src="{% static 'tracker/js/event_form.js' %}" defer></script>
 {% endblock %}

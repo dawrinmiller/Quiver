@@ -1,0 +1,68 @@
+{# Let the owner review and edit a thank-you email before sending it. #}
+{% extends 'tracker/base.html' %}
+{% block heading %}
+    Review Thank-You Email
+{% endblock %}
+{% block content %}
+    <p>
+        {{ event.application.company }}
+        —
+        {{ event.application.role }}
+    </p>
+    <p>
+        To:
+        {{ event.interviewer_email }}
+    </p>
+    <p>
+        Personalize your message with details you want to share. Only the message below will be sent.
+    </p>
+    {# Ask for extra confirmation when another email may have been sent. #}
+    {% if repeat %}
+        <p role="alert">
+            You have already sent a thank-you email for this interview. Are you sure you want to send another? A previous delivery may also be pending or uncertain; check with the recipient before sending again.
+        </p>
+    {% endif %}
+    {# Send the reviewed email only when the user chooses Send Email. #}
+    <form method="post" id="thank-you-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            Send Email
+        </button>
+    </form>
+    <a href="{% url 'application_detail' event.application_id %}">
+        Cancel
+    </a>
+    {# Show the results of earlier sending attempts. #}
+    {% if history %}
+        <h2>
+            Email history
+        </h2>
+        {% for email in history %}
+            <p>
+                {{ email.get_status_display }}
+                —
+                {{ email.attempted_at|date:'M j, Y, g:i a T' }}
+                {% if email.sent_at %}
+                    (accepted
+                    {{ email.sent_at|date:'M j, Y, g:i a T' }}
+                    )
+                {% endif %}
+                <br>
+                {{ email.recipient }}
+                —
+                {{ email.subject }}
+                {% if email.failure_info %}
+                    <br>
+                    {{ email.failure_info }}
+                {% endif %}
+            </p>
+        {% endfor %}
+    {% endif %}
+    {# Prevent a second click while the send request is running. #}
+    <script>
+        document.getElementById('thank-you-form').addEventListener('submit', function () {
+            this.querySelector('button[type="submit"]').disabled = true;
+        });
+    </script>
+{% endblock %}

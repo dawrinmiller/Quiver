@@ -82,7 +82,47 @@ class Event(models.Model):
     event_type = models.CharField(max_length=20, choices=Type.choices)
     event_date = models.DateTimeField('event date/time')
     description = models.TextField(blank=True)
+    # Save interviewer contacts when the user chooses to provide them.
+    interviewer_name = models.CharField(max_length=150, blank=True, default='')
+    interviewer_email = models.EmailField(blank=True, default='')
     schedule_version = models.PositiveIntegerField(default=1, editable=False)
+
+    # Check whether this event is an interview.
+    @property
+    def is_interview(self):
+        return self.event_type == self.Type.INTERVIEW
+
+    # Check whether the interview time has passed.
+    @property
+    def interview_completed(self):
+        from django.utils import timezone
+        from datetime import datetime
+        if not self.is_interview:
+            return False
+        if isinstance(self.event_date, datetime):
+            return self.event_date < timezone.now()
+        return self.event_date < timezone.localdate()
+
+    # Check whether this interview can receive a thank-you email.
+    @property
+    def thank_you_eligible(self):
+        return self.interview_completed and bool(self.interviewer_email)
+
+    # Find the most recent email that was successfully sent.
+    @property
+    def sent_thank_you(self):
+        return self.thank_you_emails.filter(status='sent').order_by(
+            '-sent_at',
+            '-pk'
+        ).first()
+
+    # Find the most recent sending attempt for this interview.
+    @property
+    def latest_thank_you(self):
+        return self.thank_you_emails.exclude(status='draft').order_by(
+            '-created_at',
+            '-pk'
+        ).first()
 
     # Allow a new reminder when the event time or type changes.
     def save(self, *args, **kwargs):
@@ -245,3 +285,45 @@ class Document(models.Model):
 
     def __str__(self):
         return self.filename
+
+
+# Save the reviewed email and its result separately from reminder emails.
+class InterviewThankYouEmail(models.Model):
+    # List the possible results of an email attempt.
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        SENDING = 'sending', 'Sending'
+        SENT = 'sent', 'Sent'
+        FAILED = 'failed', 'Failed'
+        UNKNOWN = 'unknown', 'Delivery uncertain'
+
+    # Keep each email connected to its interview and owner.
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='thank_you_emails'
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    token = models.UUIDField(unique=True, editable=False)
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=200)
+    body = models.TextField()
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.DRAFT
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    attempted_at = models.DateTimeField(null=True, blank=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    failure_info = models.CharField(max_length=250, blank=True)
+
+    # Set the database rules for these records.
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['event'],
+                condition=models.Q(status='sending'),
+                name='one_thank_you_sending_per_event'
+            )
+        ]

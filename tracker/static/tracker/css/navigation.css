@@ -1,0 +1,277 @@
+/* Place the Dashboard and Add Tracker buttons beside the menu button. */
+.navigation-shortcuts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Show which shortcut has keyboard focus. */
+.navigation-shortcuts a:focus-visible {
+    outline: 3px solid #a9c8f7;
+    outline-offset: 3px;
+}
+/* Shared overlay navigation keeps the existing content width unchanged. */
+.navigation-toggle,
+.navigation-close {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 12px;
+    background: #fdfdf8;
+    color: #2b3e5c;
+    cursor: pointer;
+}
+
+/* Set the size of the menu icon. */
+.navigation-toggle-icon {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 20px;
+}
+
+/* Draw the three lines of the menu icon. */
+.navigation-toggle-icon span {
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 240ms ease, opacity 240ms ease;
+}
+
+/* Place this line in the menu icon. */
+.navigation-toggle-icon span:nth-child(1) {
+    top: 1px;
+}
+
+/* Place this line in the menu icon. */
+.navigation-toggle-icon span:nth-child(2) {
+    top: 9px;
+}
+
+/* Place this line in the menu icon. */
+.navigation-toggle-icon span:nth-child(3) {
+    top: 17px;
+}
+
+/* Turn this line into part of the close icon. */
+.navigation-open .navigation-toggle-icon span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+/* Turn this line into part of the close icon. */
+.navigation-open .navigation-toggle-icon span:nth-child(2) {
+    opacity: 0;
+}
+
+/* Turn this line into part of the close icon. */
+.navigation-open .navigation-toggle-icon span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Set the sidebar size and colors. */
+.navigation-sidebar {
+    box-sizing: border-box;
+    width: 272px;
+    max-width: 85vw;
+    padding: 18px 14px;
+    background: #f2f1e9;
+    color: #2b3e5c;
+}
+
+/* Place the sidebar title beside its close button. */
+.navigation-sidebar-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* Set the sidebar title size and spacing. */
+.navigation-sidebar-heading h2 {
+    margin: 0 0 0 10px;
+    font-size: 20px;
+}
+
+/* Style the close button. */
+.navigation-close {
+    background: #e4e9f3;
+    font-size: 30px;
+}
+
+/* Make each navigation link a full clickable row. */
+.navigation-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 12px;
+    margin: 4px 0;
+    border-radius: 10px;
+    color: #2b3e5c;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+/* Highlight controls when the pointer is over them. */
+.navigation-sidebar a:hover,
+.navigation-toggle:hover,
+.navigation-close:hover {
+    background: #dce4f0;
+}
+
+/* Highlight the page the user is viewing. */
+.navigation-sidebar a[aria-current="page"] {
+    background: #2b3e5c;
+    color: #fff;
+}
+
+/* Show which navigation control has keyboard focus. */
+.navigation-sidebar a:focus-visible,
+.navigation-toggle:focus-visible,
+.navigation-close:focus-visible {
+    outline: 3px solid #5278b7;
+    outline-offset: 3px;
+}
+
+/* Give each link icon the same amount of space. */
+.navigation-icon {
+    width: 24px;
+    flex: 0 0 24px;
+    text-align: center;
+    font-size: 20px;
+}
+
+/* Make the unread notification count easy to see. */
+.navigation-badge {
+    margin-left: auto;
+    padding: 3px 7px;
+    border-radius: 20px;
+    background: #e4e9f3;
+    color: #2b3e5c;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Keep the whole header visible at the top while the page scrolls. */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+/* Keep the closed sidebar off the left edge of the screen. */
+.nav-ready .navigation-sidebar {
+    position: fixed;
+    top: var(--navigation-top, 0px);
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-shadow: 6px 8px 20px #17243c33;
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform 240ms ease, visibility 0s linear 240ms;
+}
+
+/* Dim the page behind the open sidebar. */
+.navigation-backdrop {
+    position: fixed;
+    inset: var(--navigation-top, 0px) 0 0;
+    z-index: 30;
+    background: #17243c80;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 240ms ease, visibility 0s linear 240ms;
+}
+
+/* Stop the page from scrolling while the menu is open. */
+.navigation-open {
+    overflow: hidden;
+}
+
+/* Slide the sidebar into view when the menu opens. */
+.navigation-open .navigation-sidebar {
+    visibility: visible;
+    transform: translateX(0);
+    transition-delay: 0s;
+}
+
+/* Show the backdrop when the menu opens. */
+.navigation-open .navigation-backdrop {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+/* Fit the menu and header controls on smaller screens. */
+@media (max-width: 700px) {
+
+    /* Let the header controls wrap on narrow screens. */
+    .nav-ready .topbar {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    /* Keep the menu and shortcut buttons together. */
+    .nav-ready .topbar-left {
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+
+    /* Place the Dashboard and Add Tracker buttons beside the menu button. */
+    .navigation-shortcuts {
+        gap: 8px;
+    }
+    /* Use smaller shortcut buttons on narrow screens. */
+    .navigation-shortcuts .pill-btn {
+        padding: 14px 12px;
+        font-size: 13px;
+    }
+    /* Keep the account controls together on the right. */
+    .nav-ready .topbar-right {
+        margin-left: auto;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+    /* Reduce the space inside the logout button. */
+    .nav-ready .logout-btn {
+        padding: 12px 14px;
+    }
+    /* Reduce the space around the logo. */
+    .nav-ready .logo-card {
+        padding: 8px 10px;
+    }
+    /* Keep the logo within the available space. */
+    .nav-ready .logo-image {
+        max-width: 100%;
+        height: auto;
+        max-height: 28px;
+    }
+
+    /* Fit the sidebar inside the phone screen. */
+    .nav-ready .navigation-sidebar {
+        width: 85vw;
+        max-width: 280px;
+    }
+}
+
+/* Turn off animations when the user prefers less motion. */
+@media (prefers-reduced-motion: reduce) {
+    .nav-ready .navigation-sidebar,
+    .navigation-backdrop,
+    .navigation-toggle-icon span {
+        transition: none;
+    }
+}

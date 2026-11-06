@@ -13,46 +13,55 @@
             {% endblock %}
         </title>
         <link rel="stylesheet" href="{% static 'tracker/css/base.css' %}">
-        {% block extra_css %}{% endblock %}
+        {% block extra_css %}
+        {% endblock %}
+        {# Load the latest menu styles after the page styles. #}
+        <link
+            rel="stylesheet"
+            href="{% static 'tracker/css/navigation.css' %}?v=4"
+        >
     </head>
     {# Let individual pages choose their own layout styles. #}
     <body class="{% block body_class %}{% endblock %}">
- 
+        {# Keep navigation, account controls, and the logo in the header. #}
         <header class="topbar">
-            <div class="topbar-left">
-                <a href="{% url 'notifications' %}" class="pill-btn notification-pill" aria-label="Notifications">
-                    &#128276; {{ unread_notification_count }}
-                </a>
-                <a href="{% url 'new_application' %}" class="pill-btn">
-                    + Add Tracker
-                </a>
-                <a href="{% url 'dashboard' %}" class="pill-btn">
-                    Dashboard
-                </a>
-                <a href="{% url 'upcoming_events' %}" class="pill-btn">
-                    Upcoming Events
-                </a>
-                {# Open the board and calendar without replacing existing pages. #}
-                <a href="{% url 'application_board' %}" class="pill-btn">
-                    Board
-                </a>
-                <a href="{% url 'job_search_calendar' %}" class="pill-btn">
-                    Calendar
-                </a>
-            </div>
- 
-            <div class="topbar-right">
-                <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
-                    {{ request.user.username|first|upper }}
-                </a>
- 
-                <form method="post" action="{% url 'logout' %}" class="logout-form">
-                    {% csrf_token %}
-                    <button type="submit" class="pill-btn logout-btn">
-                        Logout
+            {% if request.user.is_authenticated %}
+                <div class="topbar-left">
+                    <button type="button" id="navigation-toggle" class="navigation-toggle"
+                        aria-label="Open navigation menu" aria-expanded="false"
+                        aria-controls="main-navigation" hidden>
+                        <span class="navigation-toggle-icon" aria-hidden="true">
+                            <span>
+                            </span>
+                            <span>
+                            </span>
+                            <span>
+                            </span>
+                        </span>
                     </button>
-                </form>
- 
+                    {# Keep quick links beside the menu button. #}
+                    <div id="navigation-shortcuts" class="navigation-shortcuts">
+                        <a href="{% url 'dashboard' %}" class="pill-btn">
+                            Dashboard
+                        </a>
+                        <a href="{% url 'new_application' %}" class="pill-btn">
+                            + Add Tracker
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="topbar-right" id="header-controls">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="avatar-circle" title="Profile">
+                        {{ request.user.username|first|upper }}
+                    </a>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="pill-btn logout-btn">
+                            Logout
+                        </button>
+                    </form>
+                {% endif %}
                 <div class="logo-card">
                     <img
                         src="{% static 'tracker/images/QuiverLightLogo.png' %}"
@@ -62,7 +71,102 @@
                 </div>
             </div>
         </header>
- 
+        {% if request.user.is_authenticated %}
+            {# The same six destinations remain available without JavaScript. #}
+            {# Clicking the shaded area closes the menu. #}
+            <div id="navigation-backdrop" class="navigation-backdrop" aria-hidden="true" hidden>
+            </div>
+            {# List the six existing pages inside the sidebar. #}
+            <nav id="main-navigation" class="navigation-sidebar" aria-label="Main navigation">
+                <div class="navigation-sidebar-heading">
+                    <h2>
+                        Navigation
+                    </h2>
+                    <button type="button" id="navigation-close" class="navigation-close" aria-label="Close navigation menu" hidden>
+                        &times;
+                    </button>
+                </div>
+                {% with current=request.resolver_match.url_name %}
+                    {# Open notifications and show the unread count. #}
+                    <a
+                    href="{% url 'notifications' %}"
+                    {% if current == 'notifications' %} aria-current="page"{% endif %}
+                >
+                        <span class="navigation-icon" aria-hidden="true">
+                            &#128276;
+                        </span>
+                        <span>
+                            Notifications
+                        </span>
+                        <span class="navigation-badge" aria-label="{{ unread_notification_count }} unread notifications">
+                            {{ unread_notification_count }}
+                        </span>
+                    </a>
+                    {# Open the form for a new application. #}
+                    <a
+                    href="{% url 'new_application' %}"
+                    {% if current == 'new_application' %} aria-current="page"{% endif %}
+                >
+                        <span class="navigation-icon" aria-hidden="true">
+                            &#8853;
+                        </span>
+                        <span>
+                            Add Tracker
+                        </span>
+                    </a>
+                    {# Open the application dashboard. #}
+                    <a
+                    href="{% url 'dashboard' %}"
+                    {% if current == 'dashboard' or current == 'application_tracker' or current == 'application_detail' or current == 'application_update' or current == 'event_create' or current == 'event_update' or current == 'interview_thank_you' %} aria-current="page"{% endif %}
+                >
+                        <span class="navigation-icon" aria-hidden="true">
+                            &#9638;
+                        </span>
+                        <span>
+                            Dashboard
+                        </span>
+                    </a>
+                    {# Open the upcoming event list. #}
+                    <a
+                    href="{% url 'upcoming_events' %}"
+                    {% if current == 'upcoming_events' %} aria-current="page"{% endif %}
+                >
+                        <span class="navigation-icon" aria-hidden="true">
+                            &#9201;
+                        </span>
+                        <span>
+                            Upcoming Events
+                        </span>
+                    </a>
+                    {# Open the application board. #}
+                    <a
+                    href="{% url 'application_board' %}"
+                    {% if current == 'application_board' %} aria-current="page"{% endif %}
+                >
+                        <span class="navigation-icon" aria-hidden="true">
+                            &#9637;
+                        </span>
+                        <span>
+                            Board
+                        </span>
+                    </a>
+                    {# Open the monthly calendar. #}
+                    <a
+                    href="{% url 'job_search_calendar' %}"
+                    {% if current == 'job_search_calendar' or current == 'calendar_event_create' or current == 'calendar_invalid' %} aria-current="page"{% endif %}
+                >
+                        <span class="navigation-icon" aria-hidden="true">
+                            &#128197;
+                        </span>
+                        <span>
+                            Calendar
+                        </span>
+                    </a>
+                {% endwith %}
+            </nav>
+            <script src="{% static 'tracker/js/navigation.js' %}?v=3" defer>
+            </script>
+        {% endif %}
         <main class="page-main">
             <div class="page-card">
                 <h1 class="page-heading">
@@ -70,17 +174,14 @@
                         Quiver
                     {% endblock %}
                 </h1>
- 
                 {% for message in messages %}
                     <p class="flash-message">
                         {{ message }}
                     </p>
                 {% endfor %}
- 
                 {% block content %}
                 {% endblock %}
             </div>
         </main>
- 
     </body>
 </html>

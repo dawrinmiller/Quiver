@@ -7,6 +7,8 @@
         <br>
         {{ event.description|linebreaksbr }}
     </p>
+    {# Show interviewer contacts and thank-you email actions. #}
+    {% include 'tracker/interview_details.html' %}
     <a href="{% url 'event_update' application.pk event.pk %}">
         Edit Event
     </a>
