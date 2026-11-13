@@ -1,130 +1,268 @@
-{# Show a saved application, its events, and the owner's edit and delete controls. #}
 {% extends 'tracker/base.html' %}
+{% load static %}
 {% block title %}
-    Application Tracker
+    {{ application.company }}
+    · Application Details
+{% endblock %}
+{% block body_class %}
+    application-detail-page
+{% endblock %}
+{# Load styles for the application details page. #}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tracker/css/application_detail.css' %}">
 {% endblock %}
 {% block heading %}
-    Application Tracker
+    {{ application.company }}
 {% endblock %}
 {% block content %}
-    <h2>
-        Application Information
-    </h2>
-    <p>
-        Company Name:
-        {{ application.company }}
-    </p>
-    <p>
-        Job Title:
-        {{ application.role }}
-    </p>
-    <p>
-        Date Submitted:
-        {{ application.date_submitted|default:"Not submitted" }}
-    </p>
-    <p>
-        Status:
-        {{ application.get_status_display }}
-    </p>
-    <p>
-        Job Description:
-        {{ application.job_description|linebreaksbr }}
-    </p>
-    {% if application.job_link %}
-        <p>
-            <a href="{{ application.job_link }}" target="_blank" rel="noopener noreferrer">
-                Job posting
-            </a>
-        </p>
-    {% endif %}
-    <p>
-        Notes:
-        {{ application.notes|linebreaksbr }}
-    </p>
-    <p>
-        Created:
-        {{ application.created_at|date:"M j, Y, g:i a T" }}
-        | Updated:
-        {{ application.updated_at|date:"M j, Y, g:i a T" }}
-    </p>
-    <a href="{% url 'application_update' application.pk %}">
-        Edit Application
+    <a class="detail-back" href="{% url 'dashboard' %}">
+        <span aria-hidden="true">
+            &larr;
+        </span>
+        Back to Application Tracker
     </a>
-    <form method="post" action="{% url 'application_delete' application.pk %}" onsubmit="return confirm('Delete this application and all its events?');">
-        {% csrf_token %}
-        <button type="submit">
-            Delete Application
-        </button>
-    </form>
-    <!-- Display selected documents without making duplicate copies. -->
-    <h2>
-        Application Documents
-    </h2>
-    {% if application.resume %}
-        <p>
-            Resume:
-            {{ application.resume.filename }}
-            <a href="{% url 'document_download' application.resume_id %}">
-                Download
+    {# Show the title and main details for this section. #}
+    <header class="application-detail-header">
+        <div>
+            <p class="detail-eyebrow">
+                APPLICATION DETAILS
+            </p>
+            <h1>
+                {{ application.company }}
+            </h1>
+            <p class="detail-role">
+                {{ application.role }}
+            </p>
+            <span class="application-status-badge status-{{ application.status }}">
+                {{ application.get_status_display }}
+            </span>
+        </div>
+        <div class="detail-actions">
+            <a class="detail-button" href="{% url 'application_update' application.pk %}">
+                Edit Application
             </a>
-        </p>
-    {% else %}
-        <p>
-            No resume selected.
-        </p>
-    {% endif %}
-    {% if application.cover_letter %}
-        <p>
-            Cover letter:
-            {{ application.cover_letter.filename }}
-            <a href="{% url 'document_download' application.cover_letter_id %}?view=1" target="_blank" rel="noopener noreferrer">
-                View
+            <a class="detail-button detail-primary" href="{% url 'event_create' application.pk %}">
+                + Add Event
             </a>
-            <a href="{% url 'document_download' application.cover_letter_id %}">
-                Download
+        </div>
+    </header>
+    <div class="detail-summary-grid">
+        {# Show the saved company, job, status, and dates. #}
+        <section class="detail-card" aria-labelledby="overview-heading">
+            <h2 id="overview-heading">
+                Application Overview
+            </h2>
+            {# Show each application field with its label. #}
+            <dl class="application-info-grid">
+                <div>
+                    <dt>
+                        Company
+                    </dt>
+                    <dd>
+                        {{ application.company }}
+                    </dd>
+                </div>
+                <div>
+                    <dt>
+                        Job title
+                    </dt>
+                    <dd>
+                        {{ application.role }}
+                    </dd>
+                </div>
+                <div>
+                    <dt>
+                        Application status
+                    </dt>
+                    <dd>
+                        {{ application.get_status_display }}
+                    </dd>
+                </div>
+                <div>
+                    <dt>
+                        Date applied
+                    </dt>
+                    <dd>
+                        {{ application.date_submitted|date:'F j, Y'|default:'Not submitted' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt>
+                        Created
+                    </dt>
+                    <dd>
+                        {{ application.created_at|date:'M j, Y, g:i a T' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt>
+                        Last updated
+                    </dt>
+                    <dd>
+                        {{ application.updated_at|date:'M j, Y, g:i a T' }}
+                    </dd>
+                </div>
+            </dl>
+            {# Show this information only when it is available. #}
+            {% if application.job_link %}
+                <a class="detail-posting" href="{{ application.job_link }}" target="_blank" rel="noopener noreferrer">
+                    View Original Job Posting
+                    <span aria-hidden="true">
+                        ↗
+                    </span>
+                </a>
+            {% endif %}
+            {# Show this information only when it is available. #}
+            {% if application.job_description %}
+                <div class="detail-description">
+                    <h3>
+                        Job Description
+                    </h3>
+                    <div class="detail-prose">
+                        {{ application.job_description|linebreaksbr }}
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+        {# Show saved notes separately from application details. #}
+        <section class="detail-card" aria-labelledby="notes-heading">
+            <div class="detail-section-heading">
+                <h2 id="notes-heading">
+                    Application Notes
+                </h2>
+                <a href="{% url 'application_update' application.pk %}">
+                    Edit Notes
+                </a>
+            </div>
+            <div class="detail-prose">
+                {# Show this information only when it is available. #}
+                {% if application.notes %}
+                    {{ application.notes|linebreaksbr }}
+                {% else %}
+                    <p class="detail-muted">
+                        No notes have been added for this application.
+                    </p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+    {# List all saved events and provide an Add Event button. #}
+    <section class="application-events-section" aria-labelledby="events-heading">
+        <div class="detail-section-heading">
+            <div>
+                <h2 id="events-heading">
+                    Scheduled Events
+                    <span class="detail-count">
+                        {{ event_count }}
+                    </span>
+                </h2>
+                <p class="detail-muted">
+                    Interviews, deadlines, and your next steps. Times shown in the configured application time zone.
+                </p>
+            </div>
+            <a class="detail-button detail-primary" href="{% url 'event_create' application.pk %}">
+                + Add Event
             </a>
+        </div>
+        {# Show this information only when it is available. #}
+        {% if event_count %}
+            {# Show this information only when it is available. #}
+            {% if upcoming_events %}
+                <h3 class="detail-group-heading">
+                    Upcoming Events
+                </h3>
+                <div class="detail-event-list">
+                    {# Show a separate card for every event. #}
+                    {% for event in upcoming_events %}
+                        {# Use the shared layout for these saved details. #}
+                        {% include 'tracker/event_item.html' with timing='Upcoming' %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {# Show this information only when it is available. #}
+            {% if past_events %}
+                <h3 class="detail-group-heading">
+                    Past Events
+                </h3>
+                <div class="detail-event-list">
+                    {# Show a separate card for every event. #}
+                    {% for event in past_events %}
+                        {# Use the shared layout for these saved details. #}
+                        {% include 'tracker/event_item.html' with timing='Past' %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="detail-card detail-empty">
+                <h3>
+                    No events scheduled yet.
+                </h3>
+                <p class="detail-muted">
+                    Add an interview, deadline, or follow-up to stay organized.
+                </p>
+                <a class="detail-button" href="{% url 'event_create' application.pk %}">
+                    + Add Event
+                </a>
+            </div>
+        {% endif %}
+    </section>
+    {# Show the resume and cover letter attached to this application. #}
+    <section class="detail-card" aria-labelledby="documents-heading">
+        <div class="detail-section-heading">
+            <h2 id="documents-heading">
+                Application Documents
+            </h2>
+            <a href="{% url 'application_update' application.pk %}">
+                Change Selection
+            </a>
+        </div>
+        {# Show this information only when it is available. #}
+        {% if application.resume %}
+            {# Use the shared layout for these saved details. #}
+            {% include 'tracker/application_document.html' with document=application.resume label='Resume' %}
+        {% endif %}
+        {# Show this information only when it is available. #}
+        {% if application.cover_letter %}
+            {# Use the shared layout for these saved details. #}
+            {% include 'tracker/application_document.html' with document=application.cover_letter label='Cover letter' %}
+        {% endif %}
+        {# Show this information only when it is available. #}
+        {% if not application.resume and not application.cover_letter %}
+            <p class="detail-muted">
+                No documents attached to this application.
+            </p>
+        {% endif %}
+        <p class="detail-muted detail-small">
+            Upload, replace, or delete documents on your
+            <a href="{% url 'profile' %}">
+                Profile
+            </a>
+            .
         </p>
-    {% else %}
-        <p>
-            No cover letter selected.
-        </p>
-    {% endif %}
-    <!-- Saved feedback remains available after changing status. -->
+    </section>
+    {# Show this information only when it is available. #}
     {% if application.rejection_feedback %}
-        <h2>
-            Rejection Feedback
-        </h2>
-        <p>
-            {{ application.rejection_feedback|linebreaksbr }}
-        </p>
+        {# Show saved rejection feedback when it exists. #}
+        <section class="detail-card detail-feedback" aria-labelledby="feedback-heading">
+            <h2 id="feedback-heading">
+                Rejection Feedback
+            </h2>
+            <div class="detail-prose">
+                {{ application.rejection_feedback|linebreaksbr }}
+            </div>
+        </section>
     {% endif %}
-    <h2>
-        Important Dates / Upcoming Events
-    </h2>
-    <a href="{% url 'event_create' application.pk %}">
-        Add Event
-    </a>
-    <p>
-        Times are shown in the configured application time zone.
-    </p>
-    {% for event in upcoming_events %}
-        {% include 'tracker/event_item.html' %}
-    {% empty %}
-        <p>
-            No upcoming events.
-        </p>
-    {% endfor %}
-    <h3>
-        Past Events
-    </h3>
-    {% for event in past_events %}
-        {% include 'tracker/event_item.html' %}
-    {% empty %}
-        <p>
-            No past events.
-        </p>
-    {% endfor %}
-    <a href="{% url 'dashboard' %}">
-        Back to Dashboard
-    </a>
+    {# Keep these actions below the information they change. #}
+    <footer class="detail-footer">
+        <span class="detail-muted detail-small">
+            Deleting an application also removes its events.
+        </span>
+        {# Ask for confirmation before deleting this item. #}
+        <form method="post" action="{% url 'application_delete' application.pk %}" onsubmit="return confirm('Delete this application and all its events?');">
+            {% csrf_token %}
+            <button class="detail-button detail-danger" type="submit">
+                Delete Application
+            </button>
+        </form>
+    </footer>
 {% endblock %}

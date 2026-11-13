@@ -118,13 +118,26 @@ def application_tracker_view(request, pk=None):
     if pk is None:
         return redirect('dashboard')
     application = get_object_or_404(Application, pk=pk, user=request.user)
+    # Use the same current time when grouping and labeling events.
+    now = timezone.now()
     return render(
         request,
         'tracker/application_tracker.html',
         {
             'application': application,
-            'upcoming_events': application.events.filter(event_date__gte=timezone.now()),
-            'past_events': application.events.filter(event_date__lt=timezone.now()),
+            # Show upcoming events first and the newest past events next.
+            'upcoming_events': application.events.filter(
+                event_date__gte=now
+            ),
+            'past_events': application.events.filter(
+                event_date__lt=now
+            ).order_by(
+                '-event_date',
+                '-pk'
+            ),
+            # Supply the event total and today's date for the event cards.
+            'event_count': application.events.count(),
+            'today': timezone.localdate(now),
         }
     )
 
@@ -257,9 +270,14 @@ def profile_view(request):
         email_notification_form.save()
         messages.success(request, 'Email notification preferences updated.')
         return redirect('profile')
+    # Keep saved profile details visible while leaving update boxes empty.
     profile_form = ProfileForm(
         request.POST if action == 'profile' else None,
-        instance=profile
+        instance=profile,
+        initial={
+            'biography': '',
+            'linkedin_url': ''
+        }
     )
     document_form = DocumentForm(
         request.POST if action == 'document' else None,
@@ -277,9 +295,13 @@ def profile_view(request):
         messages.success(request, 'Document uploaded.')
         return redirect('profile')
     security_post = request.method == 'POST' and request.POST.get('action') == 'security'
+    # Save email updates while leaving the email input empty after saving.
     form = ProfileEmailForm(
         request.POST if action == 'email' else None,
-        instance=request.user
+        instance=request.user,
+        initial={
+            'email': ''
+        }
     )
     security = SecurityQuestion.objects.filter(user=request.user).first()
     security_form = SecurityQuestionForm(

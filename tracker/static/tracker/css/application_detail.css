@@ -1,0 +1,484 @@
+/* Set the width and spacing of the details page. */
+.application-detail-page .page-main {
+    max-width: 1180px;
+    padding: 32px 24px 48px;
+}
+
+/* Set the appearance of this part of the details page. */
+.application-detail-page .page-card {
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    color: #24354e;
+}
+
+/* Hide the shared heading because the company heading appears below. */
+.application-detail-page .page-heading {
+    display: none;
+}
+
+/* Set the appearance of this part of the details page. */
+.application-detail-page .page-card h2 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Keep the page text and spacing easy to read. */
+.application-detail-page h1 {
+    margin: 6px 0;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -.025em;
+}
+
+/* Keep the page text and spacing easy to read. */
+.application-detail-page h3 {
+    font-size: 16px;
+    margin: 0 0 10px;
+}
+
+/* Keep the page text and spacing easy to read. */
+.application-detail-page h4 {
+    font-size: 18px;
+    margin: 0 0 6px;
+}
+
+/* Keep the page text and spacing easy to read. */
+.application-detail-page p {
+    line-height: 1.65;
+}
+
+/* Make the link back to the tracker easy to find. */
+.application-detail-page .detail-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+/* Keep the page text and spacing easy to read. */
+.application-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+/* Style the small label above the company name. */
+.application-detail-page .detail-eyebrow {
+    font-size: 11px;
+    letter-spacing: .14em;
+    font-weight: 700;
+    margin: 0;
+    color: #4b5e79;
+}
+
+/* Show the job title below the company name. */
+.application-detail-page .detail-role {
+    font-size: 20px;
+    margin: 8px 0 16px;
+    color: #435571;
+}
+
+/* Keep each event and its details clearly separated. */
+.detail-actions, .application-event-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Set the appearance of this part of the details page. */
+.application-detail-page .page-card .detail-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 18px;
+    margin: 0;
+    border: 1px solid #a7b6ca;
+    border-radius: 24px;
+    background: #fff;
+    color: #2b3e5c;
+    font: 600 14px/1.4 'Segoe UI', Arial, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Show when the pointer is over this button. */
+.application-detail-page .page-card .detail-button:hover {
+    background: #e9eef5;
+}
+
+/* Set the appearance of this part of the details page. */
+.application-detail-page .page-card .detail-primary {
+    background: #2b3e5c;
+    border-color: #2b3e5c;
+    color: white;
+}
+
+/* Show when the pointer is over this button. */
+.application-detail-page .page-card .detail-primary:hover {
+    background: #223049;
+}
+
+/* Set the appearance of this part of the details page. */
+.application-detail-page .page-card .detail-danger {
+    color: #982e37;
+    border-color: #dfbdc2;
+    background: transparent;
+}
+
+/* Show when the pointer is over this button. */
+.application-detail-page .page-card .detail-danger:hover {
+    background: #fbe8eb;
+}
+
+/* Keep the page text and spacing easy to read. */
+.application-detail-page form {
+    margin: 0;
+}
+
+/* Arrange the overview and notes in columns. */
+.detail-summary-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 24px;
+    margin-bottom: 28px;
+    align-items: start;
+}
+
+/* Give each section a clear border and spacing. */
+.detail-card {
+    background: #fdfdf8;
+    border: 1px solid #c3cddd;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 3px 10px #2b3e5c08;
+    min-width: 0;
+}
+
+/* Arrange the application labels and values. */
+.application-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 24px;
+    margin: 24px 0;
+}
+
+/* Arrange the application labels and values. */
+.application-info-grid dt {
+    color: #56647a;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+/* Arrange the application labels and values. */
+.application-info-grid dd {
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* Separate the job description from the overview. */
+.application-detail-page .detail-description {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #dce2ea;
+}
+
+/* Arrange the section title and its action. */
+.detail-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+/* Make the action buttons easy to read and click. */
+.detail-section-heading > a:not(.detail-button) {
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+/* Use a softer color for supporting information. */
+.application-detail-page .detail-muted {
+    color: #526079;
+}
+
+/* Use smaller text for supporting information. */
+.application-detail-page .detail-small {
+    font-size: 13px;
+}
+
+/* Make longer notes and descriptions easy to read. */
+.detail-prose {
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* Arrange the document name and its actions. */
+.application-detail-page :is(h1, h2, h3, h4, p, dd, a, .detail-prose, .detail-document-name) {
+    overflow-wrap: anywhere;
+}
+
+/* Give this application status a readable badge color. */
+.application-status-badge, .detail-timing, .detail-count {
+    display: inline-block;
+    border-radius: 24px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: #e6ebf1;
+    color: #435168;
+}
+
+/* Give this application status a readable badge color. */
+.application-status-badge.status-applied {
+    background: #e0edff;
+    color: #234c89;
+}
+
+/* Give this application status a readable badge color. */
+.application-status-badge:is(.status-interviewing, .status-online_interview, .status-onsite_interview) {
+    background: #eee5fa;
+    color: #63408c;
+}
+
+/* Give this application status a readable badge color. */
+.application-status-badge.status-offer {
+    background: #dcefe4;
+    color: #246143;
+}
+
+/* Give this application status a readable badge color. */
+.application-status-badge.status-rejected {
+    background: #f9e1e4;
+    color: #952e3b;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-events-section {
+    margin-bottom: 28px;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-events-section .detail-section-heading p {
+    font-size: 14px;
+    margin: 6px 0 0;
+}
+
+/* Show the number of saved events beside the title. */
+.detail-count {
+    margin-left: 6px;
+    background: #f5f7fb;
+    vertical-align: middle;
+}
+
+/* Separate upcoming events from past events. */
+.application-detail-page .detail-group-heading {
+    font-size: 13px;
+    color: #435571;
+    margin: 20px 0 12px;
+}
+
+/* Arrange the information shown inside each event. */
+.detail-event-list {
+    display: grid;
+    gap: 16px;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-event-card {
+    background: #fff;
+    border: 1px solid #bdc9da;
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 0;
+    box-shadow: 0 3px 10px #2b3e5c08;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-event-header {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+/* Arrange the information shown inside each event. */
+.detail-event-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #edf1f8;
+    flex-shrink: 0;
+}
+
+/* Arrange the information shown inside each event. */
+.detail-event-title {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Arrange the information shown inside each event. */
+.detail-event-title time {
+    font-size: 14px;
+    color: #526079;
+    line-height: 1.6;
+}
+
+/* Make upcoming events easy to recognize. */
+.timing-upcoming {
+    background: #e0edff;
+    color: #234c89;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-event-body {
+    margin-top: 18px;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-event-body p {
+    margin: 10px 0;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-event-body > a {
+    display: inline-block;
+    padding: 10px 0;
+    font-weight: 600;
+}
+
+/* Keep each event and its details clearly separated. */
+.application-event-actions {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e1e6ef;
+}
+
+/* Arrange the document name and its actions. */
+.detail-document-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #e1e6ef;
+}
+
+/* Arrange the document name and its actions. */
+.detail-document-name {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Arrange the document name and its actions. */
+.application-detail-page .detail-document-name h3 {
+    margin: 4px 0;
+}
+
+/* Keep saved rejection feedback in its own section. */
+.detail-feedback {
+    margin-top: 24px;
+    border-left: 4px solid #ad5260;
+}
+
+/* Keep saved rejection feedback in its own section. */
+.detail-feedback .detail-prose {
+    margin-top: 16px;
+}
+
+/* Center the message shown when there are no events. */
+.detail-empty {
+    text-align: center;
+    padding: 32px 24px;
+}
+
+/* Place application deletion below the other actions. */
+.detail-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 1px solid #aebed3;
+}
+
+/* Show which link or button the keyboard has selected. */
+.application-detail-page :is(a, button):focus-visible {
+    outline: 3px solid #5a3694;
+    outline-offset: 4px;
+}
+
+/* Adjust the layout to fit smaller screens. */
+@media (max-width: 900px) {
+
+    /* Arrange the overview and notes in columns. */
+    .detail-summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Adjust the layout to fit smaller screens. */
+@media (max-width: 600px) {
+
+    /* Set the width and spacing of the details page. */
+    .application-detail-page .page-main {
+        padding: 24px 16px 36px;
+    }
+
+    /* Place application deletion below the other actions. */
+    .application-detail-header, .detail-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Keep each event and its details clearly separated. */
+    .detail-card, .application-event-card {
+        padding: 20px;
+    }
+
+    /* Arrange the application labels and values. */
+    .application-info-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    /* Arrange the section title and its action. */
+    .detail-section-heading {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    /* Keep each event and its details clearly separated. */
+    .application-event-header {
+        flex-wrap: wrap;
+    }
+
+    /* Place the event timing label beside its details. */
+    .detail-timing {
+        margin-left: 58px;
+    }
+
+    /* Arrange the document name and its actions. */
+    .detail-document-row {
+        flex-wrap: wrap;
+    }
+
+    /* Arrange the document name and its actions. */
+    .detail-document-row .detail-actions {
+        width: 100%;
+    }
+}

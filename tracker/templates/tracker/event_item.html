@@ -1,21 +1,52 @@
-{# Show one event with its date, description, and edit and delete controls. #}
-<div>
-    <p>
-        {{ event.get_event_type_display }}
-        :
-        {{ event.event_date|date:"M j, Y, g:i a T" }}
-        <br>
-        {{ event.description|linebreaksbr }}
-    </p>
-    {# Show interviewer contacts and thank-you email actions. #}
-    {% include 'tracker/interview_details.html' %}
-    <a href="{% url 'event_update' application.pk event.pk %}">
-        Edit Event
-    </a>
-    <form method="post" action="{% url 'event_delete' application.pk event.pk %}" onsubmit="return confirm('Delete this event?');">
-        {% csrf_token %}
-        <button type="submit">
-            Delete Event
-        </button>
-    </form>
-</div>
+{# Show one event in its own card. #}
+<article class="application-event-card" aria-labelledby="event-heading-{{ event.pk }}">
+    {# Show the title and main details for this section. #}
+    <header class="application-event-header">
+        <div class="detail-event-icon" aria-hidden="true">
+            {# Show this information only when it is available. #}
+            {% if event.is_interview %}
+                &#128100;
+            {% elif event.event_type == 'follow_up' %}
+                &#9993;
+            {% else %}
+                &#128197;
+            {% endif %}
+        </div>
+        <div class="detail-event-title">
+            <h4 id="event-heading-{{ event.pk }}">
+                {{ event.get_event_type_display }}
+            </h4>
+            <time datetime="{{ event.event_date|date:'c' }}">
+                {{ event.event_date|date:'F j, Y' }}
+                at
+                {{ event.event_date|date:'g:i a T' }}
+            </time>
+        </div>
+        <span class="detail-timing timing-{{ timing|lower }}">
+            {% if event.event_date|date:'Y-m-d' == today|date:'Y-m-d' %}Today · {% endif %}{{ timing }}
+        </span>
+    </header>
+    <div class="application-event-body">
+        {# Show this information only when it is available. #}
+        {% if event.description %}
+            <div class="detail-prose">
+                {{ event.description|linebreaksbr }}
+            </div>
+        {% endif %}
+        {# Use the shared layout for these saved details. #}
+        {% include 'tracker/interview_details.html' %}
+    </div>
+    {# Keep these actions below the information they change. #}
+    <footer class="application-event-actions">
+        <a class="detail-button" href="{% url 'event_update' application.pk event.pk %}">
+            Edit Event
+        </a>
+        {# Ask for confirmation before deleting this item. #}
+        <form method="post" action="{% url 'event_delete' application.pk event.pk %}" onsubmit="return confirm('Delete this event?');">
+            {% csrf_token %}
+            <button class="detail-button detail-danger" type="submit">
+                Delete Event
+            </button>
+        </form>
+    </footer>
+</article>

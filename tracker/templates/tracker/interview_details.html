@@ -45,9 +45,6 @@
         {% elif event.interview_completed %}
             <p>
                 Add interviewer email to send a thank-you.
-                <a href="{% url 'event_update' event.application_id event.pk %}">
-                    Edit Event
-                </a>
             </p>
         {% endif %}
     {% endwith %}

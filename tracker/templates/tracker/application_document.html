@@ -1,0 +1,29 @@
+{# Show this document and its available actions. #}
+<div class="detail-document-row">
+    <span class="detail-event-icon" aria-hidden="true">
+        &#128196;
+    </span>
+    <div class="detail-document-name">
+        <span class="detail-muted detail-small">
+            {{ label }}
+        </span>
+        <h3>
+            {{ document.filename }}
+        </h3>
+        <span class="detail-muted detail-small">
+            Uploaded
+            {{ document.uploaded_at|date:'M j, Y' }}
+        </span>
+    </div>
+    <div class="detail-actions">
+        {# Show this information only when it is available. #}
+        {% if document.kind != 'resume' %}
+            <a class="detail-button" href="{% url 'document_download' document.pk %}?view=1" target="_blank" rel="noopener noreferrer" aria-label="View {{ label }}: {{ document.filename }}">
+                View
+            </a>
+        {% endif %}
+        <a class="detail-button" href="{% url 'document_download' document.pk %}" aria-label="Download {{ label }}: {{ document.filename }}">
+            Download
+        </a>
+    </div>
+</div>

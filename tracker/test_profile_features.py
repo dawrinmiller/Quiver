@@ -149,6 +149,15 @@ class ProfileFeatureTests(TestCase):
         response = self.client.get(reverse('profile'))
         self.assertContains(response, '&lt;script&gt;skills&lt;/script&gt;')
         self.assertContains(response, 'rel="noopener noreferrer"')
+        # Check that saved profile details do not refill the update boxes.
+        self.assertEqual(
+            response.context['profile_form']['biography'].value(),
+            ''
+        )
+        self.assertEqual(
+            response.context['profile_form']['linkedin_url'].value(),
+            ''
+        )
         for url in (
             'http://linkedin.com/in/student',
             'https://linkedin.com.evil.com/in/student',
@@ -172,6 +181,37 @@ class ProfileFeatureTests(TestCase):
         self.assertEqual(profile.linkedin_url, '')
         self.client.force_login(self.other)
         self.assertNotContains(self.client.get(reverse('profile')), 'Updated biography')
+
+    # Check that saving an email clears its input but keeps the saved address.
+    def test_email_update_clears_input_but_preserves_saved_address(self):
+        response = self.client.post(
+            reverse('profile'),
+            {
+                'action': 'email',
+                'email': 'updated@example.com'
+            },
+            follow=True,
+        )
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, 'updated@example.com')
+        self.assertEqual(
+            response.context['form']['email'].value(),
+            ''
+        )
+        self.assertContains(response, 'updated@example.com')
+        # Keep an invalid email in the input so the user can fix it.
+        invalid = self.client.post(
+            reverse('profile'),
+            {
+                'action': 'email',
+                'email': 'invalid-address'
+            },
+        )
+        self.assertTrue(invalid.context['form'].errors)
+        self.assertEqual(
+            invalid.context['form']['email'].value(),
+            'invalid-address'
+        )
 
     def test_status_dates_feedback_and_statistics(self):
         data = {'company': 'Company', 'role': 'Engineer', 'status': 'preparing'}
